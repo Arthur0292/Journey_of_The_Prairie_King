@@ -4,4 +4,4 @@
 
 CENARIO_DATA:
 
-.incbin "cenario.txt"
+.incbin "cenario.bin"
