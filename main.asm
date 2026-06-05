@@ -29,7 +29,7 @@ game_loop:
     lw t3, 0(t2)
     andi t3, t3, 1
 
-    beq t3, zero, game_loop 
+    beq t3, zero, game_loop #Se tecla == 0 volta para o loop
 
     # Processa a tecla apertada
     lw t4, 4(t2)
