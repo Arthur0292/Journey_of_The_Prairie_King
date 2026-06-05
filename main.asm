@@ -23,7 +23,6 @@ main:
 game_loop:
     mv a0, t0
     mv a1, t1
-    mv a2, s4
 
     # Checa o teclado MMIO
     li t2, 0xFFFF0000
