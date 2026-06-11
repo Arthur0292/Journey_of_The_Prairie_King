@@ -7,8 +7,8 @@
 .align 2
 player_x:  .word 152        
 player_y:  .word 192        
-player_w:  .word 16              
-player_h:  .word 16              
+player_w:  .word 17              
+player_h:  .word 17              
 
 .text
 .globl main
@@ -67,7 +67,7 @@ mover_cima:
     j game_loop
 
 mover_baixo:
-    li t6, 224                    # 240 - 16 = 224
+    li t6, 223                    # 240 - 16 = 224
     bge t1, t6, game_loop         # Se Y >= 224, não desce mais
     addi t1, t1, 8                # Altera coordenada Y do jogador
 
@@ -80,7 +80,7 @@ mover_baixo:
     j game_loop
 
 mover_direita:
-    li t6, 304                    # 320 - 16 = 304
+    li t6, 303                    # 320 - 16 = 304
     bge t0, t6, game_loop         # Se X >= 304, não vai mais para a direita
     addi t0, t0, 8                # Altera coordenada X do jogador
 
