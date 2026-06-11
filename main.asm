@@ -106,7 +106,7 @@ mover_esquerda:
     j game_loop
 
 # #################################################
-# FUNÇÃO PRINT (Corrigida e Otimizada para 16x16)
+# FUNÇÃO PRINT
 # #################################################
 Print:
     # Cálculo do endereço base do frame usando shift
