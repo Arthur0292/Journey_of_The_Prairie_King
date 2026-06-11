@@ -1,5 +1,5 @@
 # #################################################
-# FUNÇÃO PRINT ADAPTADA DO OUTRO PROJETO
+# FUNÇÃO PRINT
 # #################################################
 #	a0 = endereço imagem			
 #	a1 = x					
