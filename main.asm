@@ -123,8 +123,8 @@ Print:
     mv t1, zero             # Contador de linha (Y) = 0
     mv t6, a0               # t6 = Ponteiro dos bytes da imagem
     
-    li t3, 16               # t3 = largura fixada em 16
-    li t4, 16               # t4 = altura fixada em 16
+    li t3, 17               # t3 = largura fixada em 17
+    li t4, 17               # t4 = altura fixada em 17
     
 PrintLinha:
     mv t2, zero             # Reseta o contador de colunas
