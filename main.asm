@@ -146,8 +146,6 @@ PrintColuna:
     blt t1, t4, PrintLinha  # Se linha < 16, repete para a próxima linha
     ret                     
     
-# Arquivos externos com as labels de pixels correspondentes
-.include "sprites/cenario.asm"
 .include "sprites/frente.asm"
 .include "sprites/costas.asm"
 .include "sprites/esquerda.asm"
