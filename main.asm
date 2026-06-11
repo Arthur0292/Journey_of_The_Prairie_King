@@ -1,1 +1,5 @@
+.data
+
+.align 2
+
 
