@@ -7,8 +7,8 @@
 .align 2
 player_x:  .word 152        
 player_y:  .word 192        
-player_w:  .word 16              # Atualizado para 16
-player_h:  .word 16              # Atualizado para 16
+player_w:  .word 16              
+player_h:  .word 16              
 
 .text
 .globl main
@@ -17,14 +17,17 @@ main:
     lw t0, player_x
     lw t1, player_y
 
+    # Desenha o jogador parado na posição inicial ao abrir o jogo
+    la a0, sprite_frente_dados   
+    mv a1, t0                    
+    mv a2, t1                    
+    li a3, 0                     
+    jal Print
+
 game_loop:
     # Salva na memória RAM para atualizar a posição real do jogo
     sw t0, player_x
     sw t1, player_y
-
-    # Prepara os argumentos padrões antes de checar o teclado
-    mv a1, t0
-    mv a2, t1
 
     # Checa o teclado MMIO
     li t2, 0xFFFF0000
@@ -53,28 +56,97 @@ game_loop:
 mover_cima:
     li t6, 0
     ble t1, t6, game_loop         # Se Y <= 0, não sobe mais
-    addi t1, t1, -8               
+    addi t1, t1, -8               # Altera coordenada Y do jogador
+
+    # Carimba o sprite andando para cima (Costas)
+    la a0, sprite_costas_dados    
+    mv a1, t0                     
+    mv a2, t1                     
+    li a3, 0                      
+    jal Print
     j game_loop
 
 mover_baixo:
     li t6, 224                    # 240 - 16 = 224
     bge t1, t6, game_loop         # Se Y >= 224, não desce mais
-    addi t1, t1, 8
+    addi t1, t1, 8                # Altera coordenada Y do jogador
+
+    # Carimba o sprite andando para baixo (Frente)
+    la a0, sprite_frente_dados    
+    mv a1, t0                     
+    mv a2, t1                     
+    li a3, 0                      
+    jal Print
     j game_loop
 
 mover_direita:
     li t6, 304                    # 320 - 16 = 304
     bge t0, t6, game_loop         # Se X >= 304, não vai mais para a direita
-    addi t0, t0, 8
+    addi t0, t0, 8                # Altera coordenada X do jogador
+
+    # Carimba o sprite andando para a direita
+    la a0, sprite_direita_dados   
+    mv a1, t0                     
+    mv a2, t1                     
+    li a3, 0                      
+    jal Print
     j game_loop
 
 mover_esquerda:
     li t6, 0
     ble t0, t6, game_loop         # Se X <= 0, não vai mais para a esquerda
-    addi t0, t0, -8
+    addi t0, t0, -8               # Altera coordenada X do jogador
+
+    # Carimba o sprite andando para a esquerda
+    la a0, sprite_esquerda_dados  
+    mv a1, t0                     
+    mv a2, t1                     
+    li a3, 0                      
+    jal Print
     j game_loop
+
+# #################################################
+# FUNÇÃO PRINT (Corrigida e Otimizada para 16x16)
+# #################################################
+Print:
+    # Cálculo do endereço base do frame usando shift
+    li t0, 0xFF0            
+    add t0, t0, a3          
+    slli t0, t0, 20         # t0 = 0xFF000000 ou 0xFF100000
     
+    # Aplica a fórmula: DISPLAY_BASE + (Y * 320) + X
+    li t1, 320              
+    mul t1, t1, a2          # t1 = Y * 320
+    add t0, t0, t1          
+    add t0, t0, a1          # t0 = Endereço do pixel exato na tela
     
+    mv t1, zero             # Contador de linha (Y) = 0
+    mv t6, a0               # t6 = Ponteiro dos bytes da imagem
+    
+    li t3, 16               # t3 = largura fixada em 16
+    li t4, 16               # t4 = altura fixada em 16
+    
+PrintLinha:
+    mv t2, zero             # Reseta o contador de colunas
+
+PrintColuna:
+    lbu t5, 0(t6)           # Carrega a cor do pixel do sprite
+    sb t5, 0(t0)            # Escreve a cor na tela
+    
+    addi t0, t0, 1          # Anda para o próximo pixel à direita na tela
+    addi t6, t6, 1          # Avança na memória do sprite
+    addi t2, t2, 1          # Incrementa coluna
+    blt t2, t3, PrintColuna # Se coluna < 16, continua a linha
+    
+    # Próxima linha da tela
+    addi t0, t0, 320        
+    sub t0, t0, t3          # Reposiciona o ponteiro horizontal da tela
+    
+    addi t1, t1, 1          # Incrementa linha
+    blt t1, t4, PrintLinha  # Se linha < 16, repete para a próxima linha
+    ret                     
+    
+# Arquivos externos com as labels de pixels correspondentes
 .include "sprites/cenario.asm"
 .include "sprites/frente.asm"
 .include "sprites/costas.asm"
