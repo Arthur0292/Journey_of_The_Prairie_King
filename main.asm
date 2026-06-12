@@ -2,18 +2,22 @@
 .align 2
 
 # Dados de controle do Jogador
-player_x:  .word 152       
-player_y:  .word 192       
+player_x:  .word 152
+player_y:  .word 192
 
 # ---------------------------------------------------------
 # CARGA DOS SPRITES E CENÁRIO
 # ---------------------------------------------------------
 .align 2
-# Se o seu RARS aceitar o .incbin customizado, use a linha abaixo:
-CENARIO_DATA: .incbin "sprites/cenario.bin"
-
-# Caso dê erro no .incbin devido à versão do seu RARS, comente a linha 
-# anterior com '#' e descomente a linha abaixo para incluir como .asm:
+# FIX BUG 3: .incbin não é suportado no RARS padrão.
+# Use .include com o arquivo .asm equivalente.
+# Se você tiver o RARS customizado com .incbin, troque pelas linhas comentadas abaixo.
+#
+# VERSÃO .incbin  (RARS customizado):
+# CENARIO_DATA: .incbin "sprites/cenario.bin"
+#
+# VERSÃO .include (RARS padrão — ATIVA):
+CENARIO_DATA:
 .include "sprites/cenario.asm"
 
 .align 2
@@ -60,25 +64,24 @@ game_loop:
     jal ra, desenhar_bitmap
 
     # ---------------------------------------------------------
-    # PASSO 4: EXIBIR O BUFFER PRONTO NA TELA (MMIO)
-    # ---------------------------------------------------------
-    li t2, 0xFF200604        # Endereço de controle de frame do Bitmap Display
-    sw s0, 0(t2)             # Joga o valor de s0 para o hardware atualizar a tela
-
-    # ---------------------------------------------------------
-    # PASSO 5: CONTROLE DE FLUIDEZ (DELAY DE ~60 FPS)
+    # PASSO 4: CONTROLE DE FLUIDEZ (DELAY DE ~60 FPS)
+    # FIX BUG 2: o "sw s0, 0(0xFF200604)" foi REMOVIDO.
+    # Esse endereço é do hardware DE1-SoC (Altera), não existe no RARS.
+    # No RARS o double buffering é feito escrevendo diretamente nas
+    # bases 0x10010000 (frame 0) / 0x10110000 (frame 1), o que já
+    # acontece corretamente dentro de desenhar_bitmap via s7.
     # ---------------------------------------------------------
     li a7, 32                # Syscall de Sleep do RARS
     li a0, 16                # Aguarda 16 milissegundos
     ecall
 
     # ---------------------------------------------------------
-    # PASSO 6: LEITURA DO TECLADO POR MMIO
+    # PASSO 5: LEITURA DO TECLADO POR MMIO
     # ---------------------------------------------------------
     li t2, 0xFFFF0000        # Endereço de controle do teclado
     lw t3, 0(t2)             # Lê o status do teclado
     andi t3, t3, 1           # Isola o bit de tecla pressionada
-    beq t3, zero, game_loop  # Se nenhuma tecla foi pressionada, pula direto para o próximo frame
+    beq t3, zero, game_loop  # Se nenhuma tecla foi pressionada, vai pro próximo frame
 
     # Processa o caractere ASCII da tecla
     lw t4, 4(t2)
@@ -95,7 +98,7 @@ game_loop:
     li t5, 0x64              # Código ASCII para 'd' (Direita)
     beq t4, t5, mover_direita
 
-    j game_loop              # Se foi outra tecla, apenas continua o loop
+    j game_loop              # Outra tecla: continua o loop
 
 # ---------------------------------------------------------
 # BLOCOS DE MOVIMENTAÇÃO E SELEÇÃO DE SPRITE
@@ -103,7 +106,7 @@ game_loop:
 mover_cima:
     li t6, 8
     blt t1, t6, game_loop    # Impede de sair pelas bordas superiores
-    addi t1, t1, -8                
+    addi t1, t1, -8
     la s4, sprite_costas     # Muda o visual para costas
     j game_loop
 
