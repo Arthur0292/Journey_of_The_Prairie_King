@@ -27,7 +27,7 @@ desenhar_bitmap:
     mv s3, a2                # s3 = Ponteiro de varredura dos dados de pixels
     mv s4, a4                # s4 = Limite total de colunas (Largura)
     mv s5, a5                # s5 = Limite total de linhas (Altura)
-    
+
     # --- GERENCIAMENTO DE BUFFER DUPLO ---
     # RARS Frame 0 Base: 0x10010000
     # RARS Frame 1 Base: 0x10110000
@@ -53,9 +53,9 @@ coluna_loop:
 
     # 2. Mapeamento matemático de pixels lógicos para pixels físicos (Escala 4x4)
     # Linha física = (Y_inicial + Y_atual) * SCALE (4)
-    add t4, s2, s6           
+    add t4, s2, s6
     slli t4, t4, 2           # t4 = Linha física final
-    
+
     # Avanço em bytes na tela física = Linha física * 512 pixels de largura * 4 bytes por pixel
     # 512 * 4 = 2048 bytes por linha da janela do RARS
     li t5, 2048
@@ -63,7 +63,7 @@ coluna_loop:
     add t4, t4, s7           # Soma o offset da linha física com a base da VRAM (s7)
 
     # Coluna física = (X_inicial + X_atual) * SCALE (4)
-    add t5, s1, t0           
+    add t5, s1, t0
     slli t5, t5, 2           # t5 = Coluna física final
     slli t5, t5, 2           # Converte a coluna física para escala de bytes (* 4)
     add t4, t4, t5           # t4 = Endereço exato de memória para iniciar o bloco 4x4
@@ -76,19 +76,22 @@ bloco_x:
     sw t3, 0(t4)             # Plota o pixel físico na memória de vídeo
     addi t4, t4, 4           # Anda 1 pixel físico para a direita (+4 bytes)
     addi t5, t5, 1
-    li a7, 4                 # SCALE = 4
-    blt t5, a7, bloco_x
+    # FIX BUG 1: era "li a7, 4" — a7 é registrador de syscall no RARS!
+    # Substituído por t6, que está livre neste escopo.
+    li t6, 4                 # SCALE = 4
+    blt t5, t6, bloco_x
 
     # --- RESOLUÇÃO DO ADDI OVERFLOW ---
-    # Para avançar uma linha física para baixo, carregamos o valor grande (2048) 
+    # Para avançar uma linha física para baixo, carregamos o valor grande (2048)
     # em t6 usando 'li' para contornar o limite de 12 bits assinalados do 'addi' (máx 2047)
-    li t6, 2048              
+    li t6, 2048
     add t4, t4, t6           # Pula o equivalente a uma linha inteira física para baixo
     addi t4, t4, -16         # Recua 16 bytes (4 pixels) para alinhar o cursor na mesma coluna
-    
+
     addi t2, t2, 1
-    li a7, 4                 # SCALE = 4
-    blt t2, a7, bloco_y
+    # FIX BUG 1: era "li a7, 4" — mesma correção aplicada aqui.
+    li t6, 4                 # SCALE = 4
+    blt t2, t6, bloco_y
 
     # 4. Incremento e processamento dos loops de dados
     addi s3, s3, 3           # Avança 3 bytes nos dados brutos do arquivo (Próximo pixel BGR)
