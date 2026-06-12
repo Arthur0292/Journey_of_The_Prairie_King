@@ -14,7 +14,7 @@ CENARIO_DATA: .incbin "sprites/cenario.bin"
 
 # Caso dê erro no .incbin devido à versão do seu RARS, comente a linha 
 # anterior com '#' e descomente a linha abaixo para incluir como .asm:
-# .include "sprites/cenario.asm"
+.include "sprites/cenario.asm"
 
 .align 2
 .include "sprites/frente.asm"
