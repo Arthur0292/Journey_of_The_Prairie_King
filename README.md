@@ -1,1 +1,1 @@
-# -Journey-of-The-Prairie-King
+# Journey of The Prairie King
