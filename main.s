@@ -31,10 +31,10 @@ sh t2, 2(t0)
 
 game_loop:
 
-la t0, 0xFF200000	#Carregar em t0 o endereco do teclado
+li t0, 0xFF200000	#Carregar em t0 o endereco do teclado
 lw t1, 0(t0)	#Aramzenar em t1 o endereço do teclado
 
-andi t1, 1	#Se for 0 entao and 0 + 0 = 0 mas se for 1 entao and 1 + 1 = 1
+andi t1, t1, 1	#Se for 0 entao and 0 + 0 = 0 mas se for 1 entao and 1 + 1 = 1
 
 beq t1, zero, sem_tecla		#Se t0 = 0 entao nao apertou nenhuma tecla e pula
 
