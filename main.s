@@ -1,6 +1,6 @@
 ##############################################################
 #           Journey of The Prairie King - 2026
-#			Trabalho de ISC	
+#			      Trabalho de ISC	
 #						     
 ##############################################################
 
@@ -10,7 +10,7 @@
 OLD_CHAR_POS: .half 80, 80
 CHAR_POS: .half 80, 80
 
-PLAYER_STATE: .word 0	
+PLAYER_STATE: .word 0	# 0 = frente, 1 = costas, 2 = direita, 3 = esquerda
 
 
 
@@ -60,7 +60,8 @@ mover_cima:
 
 la t0, CHAR_POS		#Pegando o endereço da posição do jogador
 lh t1, 2(t0)		#ler da memoria o offset 2 = y
-addi t1, t1, -8		#Subtrai -8  pixels 
+addi t1, t1, -8		#Subtrai -8  pixels
+blt t1, zero, sem_tecla	#Se y < 0 entao nao muda a posição 
 sh t1, 2(t0)		#Guarda a nova posição no offset 2 = y
 
 la t0, PLAYER_STATE	#Pegando o endereço do status do player
@@ -74,6 +75,7 @@ mover_esquerda:
 la t0, CHAR_POS		#Pegando o endereço da posição do jogador
 lh t1, 0(t0)		#ler da memoria o offset 0 = x
 addi t1, t1, -8
+blt t1, zero, sem_tecla	#Se x<0 então não muda de posição
 sh t1, 0(t0)		#Guarda a nova posição no offset 0 = x
 
 la t0, PLAYER_STATE	
@@ -87,10 +89,12 @@ mover_baixo:
 la t0, CHAR_POS		#Pegando o endereço da posição do jogador
 lh t1, 2(t0)		#ler da memoria o offset 2 = y
 addi t1, t1, 8		#Soma 8
+li t4, 223		#Guarda 223 em t4
+bgt t1, t4, sem_tecla	#Se t1>223 então não muda de posição
 sh t1, 2(t0)		#Guarda a nova posição no offset 0 = x
 
 la t0, PLAYER_STATE	
-li t1, 2
+li t1, 0
 sw t1, 0(t0)
 
 j sem_tecla
@@ -101,10 +105,12 @@ mover_direita:
 la t0, CHAR_POS		#Pegando o endereço da posição do jogador
 lh t1, 0(t0)		#ler da memoria o offset 0 = x
 addi t1, t1, 8		#Soma 8
+li t4, 303		#Guarda em t4 o valor 303
+bgt t1, t4, sem_tecla	#Se t1 > 303 então não muda de posição
 sh t1, 0(t0)		#Guarda a nova posição no offset 0 = x
 
 la t0, PLAYER_STATE	
-li t1, 4
+li t1, 2
 sw t1, 0(t0)
 
 j sem_tecla
