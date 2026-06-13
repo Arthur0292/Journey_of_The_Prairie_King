@@ -40,21 +40,21 @@ beq t1, zero, sem_tecla		#Se t0 = 0 entao nao apertou nenhuma tecla e pula
 
 lw t2, 4(t0)	#Como t0 aramzena 4 bytes eu pulo e armazeno o endereço da tecla em t2
 
-li t3, 'w
-beq t2, 'w', mover_cima		#Se tecla = w pula para mover cima
+li t3, 'w'
+beq t2, t3 , mover_cima		#Se tecla = w pula para mover cima
 
-li t3, 'w
-beq t2, 'a', mover_esquerda	#Se tecla = a pula para mover cima
+li t3, 'a'
+beq t2, t3 , mover_esquerda	#Se tecla = a pula para mover esquerda
 
-li t3, 'w
-beq t2, 's', mover_baixo	#Se tecla = s pula para mover cima
+li t3, 's'
+beq t2, t3 , mover_baixo	#Se tecla = s pula para mover baixo
 
-li t3, 'w
-beq t2, 'd', mover_direita	#Se tecla = d pula para mover cima
+li t3, 'd'
+beq t2, t3 , mover_direita	#Se tecla = d pula para mover direita
 
 sem_tecla:
 
-j gameloop
+j game_loop
 
 mover_cima:
 
