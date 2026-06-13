@@ -112,8 +112,6 @@ GAME_LOOP:
     # O frame de trabalho vira o visível
     mv   s0, s3
 
-    # (REMOVIDO DAQUI O PASSO DE SALVAR A POSIÇÃO ANTIGA)
-
     j    GAME_LOOP
 KEY:
     li   t0, 0xFF200000
@@ -128,16 +126,16 @@ KEY:
     lh   t4, 2(t0)              # y → t4
 
     li   t5, 'w'
-    beq  t2, t5, MOVE_UP
+    beq  t2, t5, MOVER_CIMA
     li   t5, 's'
-    beq  t2, t5, MOVE_DOWN
+    beq  t2, t5, MOVER_BAIXO
     li   t5, 'a'
-    beq  t2, t5, MOVE_LEFT
+    beq  t2, t5, MOVER_ESQUERDA
     li   t5, 'd'
-    beq  t2, t5, MOVE_RIGHT
+    beq  t2, t5, MOVER_DIREITA
     j    KEY_FIM
 
-MOVE_UP:
+MOVER_CIMA:
     addi t4, t4, -8
     blt  t4, zero, KEY_FIM
     la   t0, CHAR_POS
@@ -147,7 +145,7 @@ MOVE_UP:
     sw   t5, 0(t6)
     j    KEY_FIM
 
-MOVE_DOWN:
+MOVER_BAIXO:
     addi t4, t4, 8
     li   t5, 223
     bgt  t4, t5, KEY_FIM
@@ -158,7 +156,7 @@ MOVE_DOWN:
     sw   t5, 0(t6)
     j    KEY_FIM
 
-MOVE_LEFT:
+MOVER_ESQUERDA:
     addi t3, t3, -8
     blt  t3, zero, KEY_FIM
     la   t0, CHAR_POS
@@ -168,7 +166,7 @@ MOVE_LEFT:
     sw   t5, 0(t6)
     j    KEY_FIM
 
-MOVE_RIGHT:
+MOVER_DIREITA:
     addi t3, t3, 8
     li   t5, 303
     bgt  t3, t5, KEY_FIM
