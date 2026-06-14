@@ -193,6 +193,7 @@ ret	#Retorna para o game_loop
 .include "funcoes/apagar.asm"
 
 .data
+.include "sprites/cenario1.asm"
 .include "sprites/frente.asm"
 .include "sprites/costas.asm"
 .include "sprites/direita.asm"
