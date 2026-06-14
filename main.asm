@@ -34,9 +34,20 @@ sh t2, 2(t0)
 
 li s0, 0
 
+la a0, CENARIO_DATA	#Carrega o endereco do cenario
+li a1, 0		#Carrega em a1 o frame
+call print_imagem
+
+la a0, CENARIO_DATA	#Carrega o endereco do cenario
+li a1, 1		#Carrega em a1 o frame
+call print_imagem
+
+
 game_loop:
 
 xori s3, s0, 1	#Alterna o frame 
+
+
 
 la t0, OLD_CHAR_POS	#Carrego em t0 o OLD_CHAR_POS
 lh a1, 0(t0)		#Coloco em t0 o endereco do offset 0 = x
