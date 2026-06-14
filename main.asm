@@ -191,7 +191,7 @@ ret	#Retorna para o game_loop
 
 .include "funcoes/print.asm"
 .include "funcoes/apagar.asm"
-.include "funcoes/print_imagem"
+.include "funcoes/print_imagem.asm"
 
 .data
 .include "sprites/cenario1.asm"
