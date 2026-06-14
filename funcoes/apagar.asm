@@ -1,4 +1,4 @@
-#FunÃ§Ã£o Apagar
+#Função Apagar
 #a1 = x                    
 #a2 = y                                                  
 #a3 = largura                                            
@@ -11,7 +11,7 @@ li t0, 0xFF0	#Coloco em t0 o endereÃ§o base
 add t0, t0, a5	#Adiciono com o frame se for 0 = 0xff0 se for 1 = 0xff1
 slli t0, t0, 20	#Formato o endereÃ§o
 
-#Calculo para achar o endereÃ§o = offset +(y * 320 + x)
+#Calculo para achar o endereço = offset +(y * 320 + x)
 li t4, 320		#Armazneo em t4 320
 mul t2, a2, t4		#t2 = (320 * y)
 add t2, t2, a1		#t2 + x
