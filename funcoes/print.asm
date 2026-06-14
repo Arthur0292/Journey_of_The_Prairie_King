@@ -1,6 +1,6 @@
 #Função Print
-#a0 = endereço do sprite/imagem
-#a1 = x                    
+#a0 = endereço do sprite
+#a1 = x                   
 #a2 = y                                                  
 #a3 = largura                                            
 #a4 = altura                                             
