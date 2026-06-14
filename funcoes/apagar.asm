@@ -1,52 +1,47 @@
-##############################################################
-#                   Função: Apagar                           #
-#                                                            #
-#   Apaga região em UM frame específico (o de trabalho).    #
-#                                                            #
-#   a1 = x                                                  #
-#   a2 = y                                                  #
-#   a3 = largura                                            #
-#   a4 = altura                                             #
-#   a5 = frame (0 ou 1)                                     #
-#                                                            #
-#   t0 = endereço no frame                                  #
-#   t1 = contador de linha                                  #
-#   t2 = contador de coluna                                 #
-#   t3 = stride restante (320 - largura)                    #
-#   t4 = auxiliar                                           #
-##############################################################
+#Função Apagar
+#a1 = x                    
+#a2 = y                                                  
+#a3 = largura                                            
+#a4 = altura                                             
+#a5 = frame (0 ou 1)                                    
 
 Apagar:
-    # 1. Endereço base do frame (mesmo cálculo do Print)
-    li   t0, 0xFF0
-    add  t0, t0, a5             # 0xFF0 + frame
-    slli t0, t0, 20             # 0xFF000000 ou 0xFF100000
 
-    # 2. Offset = y * 320 + x
-    li   t4, 320
-    mul  t4, t4, a2
-    add  t0, t0, t4
-    add  t0, t0, a1
+li t0, 0xFF0	#Coloco em t0 o endereço base
+add t0, t0, a5	#Adiciono com o frame se for 0 = 0xff0 se for 1 = 0xff1
+slli t0, t0, 20	#Formato o endereço
 
-    # 3. stride = 320 - largura
-    li   t3, 320
-    sub  t3, t3, a3
+#Calculo para achar o endereço = offset +(y * 320 + x)
+li t4, 320		#Armazneo em t4 320
+mul t2, a2, t4		#t2 = (320 * y)
+add t2, t2, a1		#t2 + x
+add t0, t0, t2		# endereco base + (320 * y + x)
 
-    li   t1, 0                  # linha
-    li   t2, 0                  # coluna
 
-ApagarLinha:
-    sb   zero, 0(t0)
+sub t3, t4, a3	#Aramzeno em t3 o stride que e 320- 17
 
-    addi t0, t0, 1
-    addi t2, t2, 1
+li t1, 0		#Contador para as linhas
+li t2, 0		#Contador para as colunas
 
-    blt  t2, a3, ApagarLinha    # coluna < largura?
+Apagar_linha:
 
-    add  t0, t0, t3             # pula resto da linha
-    li   t2, 0
-    addi t1, t1, 1
+sb zero, 0(t0)	#Printo o pixel na tela
+addi t0, t0, 1	#Adiciono mais 1 para os pixels pintados
+addi t2, t2, 1	#colunas++
 
-    blt  t1, a4, ApagarLinha    # linha < altura?
+blt t2, a3, Apagar_linha	#enquanto t2 for menor que a largura
 
-    ret
+add t0, t0, t3		#Soma t0 + stride
+li t2, 0		#Zero as colunas
+addi t1, t1, 1		#linhas++
+
+blt t1, a4, Apagar_linha	#enquanto t1 for menor que a altura
+
+ret		#retorno
+
+
+
+
+
+
+  
