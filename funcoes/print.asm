@@ -1,61 +1,53 @@
-##############################################################
-#                   Função: Print                            #
-#                                                            #
-#   a0 = endereço do sprite (direto nos bytes, sem header)  #
-#   a1 = x                                                  #
-#   a2 = y                                                  #
-#   a3 = frame (0 ou 1)                                     #
-#   a4 = largura  (ex: 16)                                  #
-#   a5 = altura   (ex: 21)                                  #
-#                                                            #
-#   t0 = endereço no Bitmap Display                         #
-#   t1 = contador de linha                                  #
-#   t2 = contador de coluna                                 #
-#   t3 = largura                                            #
-#   t4 = altura                                             #
-#   t5 = byte de cor / auxiliar                             #
-#   t6 = ponteiro no sprite                                 #
-##############################################################
+#Função Print
+#a0 = endereço do sprite
+#a1 = x                    
+#a2 = y                                                  
+#a3 = largura                                            
+#a4 = altura                                             
+#a5 = frame (0 ou 1)                                    
+
 
 Print:
-    # 1. Endereço base do frame
-    li   t0, 0xFF0
-    add  t0, t0, a3
-    slli t0, t0, 20             # 0xFF000000 ou 0xFF100000
 
-    # 2. Offset = y * 320 + x
-    li   t1, 320
-    mul  t1, t1, a2
-    add  t0, t0, t1
-    add  t0, t0, a1
+li t0, 0xFF0	#Coloco em t0 o endereço base
+add t0, t0, a5	#Adiciono com o frame se for 0 = 0xff0 se for 1 = 0xff1
+slli t0, t0, 20	#Formato o endereço
 
-    # 3. Largura e altura vêm de a4 e a5 (sem header no sprite)
-    mv   t3, a4                 # largura
-    mv   t4, a5                 # altura
-    mv   t6, a0                 # ponteiro no sprite
+#Calculo para achar o endereço = offset +(y * 320 + x)
+li t1, 320		#Armazneo em t4 320
+mul t1, a2, t1		#t1 = (320 * y)
+add t1, t1, a1		#t2 + x
+add t0, t0, t1		# endereco base + (320 * y + x)
 
-    # 4. Contadores
-    li   t1, 0                  # linha
-    li   t2, 0                  # coluna
+mv t6, a0	#Movo para t6 o endereco base do sprite
+
+li t5, 320
+sub t3, t5, a3	#Aramzeno em t3 o stride que e 320 - 17
+
+li t1, 0	#Contador de linha e coluna
+li t2, 0
 
 PrintLinha:
-    lbu  t5, 0(t6)
-    sb   t5, 0(t0)
 
-    addi t0, t0, 1
-    addi t6, t6, 1
-    addi t2, t2, 1
+lbu t5, 0(t6)	#le o byte dentro do sprite
+sb t5, 0(t0)	#Imprimir o sprite
+addi t0, t0, 1
+addi t2, t2, 1	#Colunas++
+addi t6, t6, 1	#Pulo para o proximo byte
 
-    blt  t2, t3, PrintLinha     # coluna < largura?
+blt t2, a3, PrintLinha
 
-    # fim de linha: pula restante do display
-    li   t5, 320
-    sub  t5, t5, t3
-    add  t0, t0, t5
+add t0, t0, t3	#Movendo t0 = t0 + stride
+li t2, 0	#Colunas = 0
+addi t1, t1, 1	#Linhas++
 
-    li   t2, 0
-    addi t1, t1, 1
+blt t1, a4, PrintLinha
 
-    blt  t1, t4, PrintLinha     # linha < altura?
+ret
 
-    ret
+
+
+
+
+
+
