@@ -1,13 +1,16 @@
 ##############################################################
-#            Journey of The Prairie King - 2026              #
+#           Journey of The Prairie King - 2026
+#		Trabalho de ISC	
+#						     
 ##############################################################
+
 
 .data
 
-CHAR_POS:     .half 80, 80
 OLD_CHAR_POS: .half 80, 80
+CHAR_POS: .half 80, 80
 
-playerstate: .word 0           # 0=frente 1=costas 2=direita 3=esquerda
+PLAYER_STATE: .word 0	# 0 = frente, 1 = costas, 2 = direita, 3 = esquerda
 
 player_state_sprite:
     .word sprite_frente_dados,   17, 17
@@ -16,169 +19,175 @@ player_state_sprite:
     .word sprite_esquerda_dados, 17, 17
 
 .text
+main:
 
-    li   s0, 0                  # s0 = frame visível
+#.half = 2 bytes
+#Armazenar posição atual do jogador
+la t0, CHAR_POS #Armazena em t0 o endereço do CHAR_POS
+lh t1, 0(t0)	#Le o (offset 0) e armazena em t1
+lh t2, 2(t0)	#Le o (offset 2) e armazena em t2
 
-    li   t5, 80
-    li   t6, 80
-    la   t0, CHAR_POS
-    sh   t5, 0(t0)
-    sh   t6, 2(t0)
-    la   t0, OLD_CHAR_POS
-    sh   t5, 0(t0)
-    sh   t6, 2(t0)
+#Armazenar os valores na posição antiga
+la t0, OLD_CHAR_POS
+sh t1, 0(t0)	
+sh t2, 2(t0)
 
-    j    GAME_LOOP
+li s0, 0
 
-##############################################################
-# Registradores salvos (s):                                  #
-#   s0 = frame visível                                       #
-#   s3 = frame de trabalho (s0 XOR 1)                        #
-# KEY usa internamente apenas t0..t6 e salva x/y em          #
-# variáveis de memória, sem tocar em s0..s3                  #
-##############################################################
+game_loop:
 
-GAME_LOOP:
+xori s3, s0, 1	#Alterna o frame 
 
-    # 1) Define o frame de trabalho
-    xori s3, s0, 1              # s3 = frame de trabalho
+la t0, OLD_CHAR_POS	#Carrego em t0 o OLD_CHAR_POS
+lh a1, 0(t0)		#Coloco em t0 o endereco do offset 0 = x
+lh a2, 2(t0)		#Coloco em t0 o endereco do offset 2 = y
+li a3, 17		#Coloque em a3 a alrgura
+li a4, 17		#Coloco em a4 a altura
+mv a5, s3		#Coloco em a5 o frame de trabalho
 
-    # ========================================================
-    # 2) APAGA A POSIÇÃO ANTIGA NO FRAME DE TRABALHO
-    # ========================================================
-    la   t0, OLD_CHAR_POS
-    lh   a1, 0(t0)
-    lh   a2, 2(t0)
-    li   a3, 17                 # largura do boneco
-    li   a4, 17                 # altura do boneco
-    mv   a5, s3                 # frame de trabalho
+addi sp, sp, -4	#Salvar o ra para o call apagar
+sw   ra, 0(sp)
+call Apagar
+lw   ra, 0(sp)
+addi sp, sp, 4
 
-    addi sp, sp, -4
-    sw   ra, 0(sp)
-    call Apagar
-    lw   ra, 0(sp)
-    addi sp, sp, 4
+la t0, OLD_CHAR_POS		#Carrega o endereço de old_char para t0
+la t1, CHAR_POS			#carrega o endereço de char para t1
+lh t2, 0(t1)		#Ler o o valor x de t1 
+sh t2, 0(t0)		#Armazena esse valor no old_char
+lh t2, 2(t1)		#Ler o o valor y de t1
+sh t2, 2(t0)		#Armazena esse valor no old_char
 
-    # ========================================================
-    # 3) O PULO DO GATO: Atualiza OLD_CHAR_POS ANTES do teclado alterar CHAR_POS
-    # Dessa forma, OLD_CHAR_POS guarda exatamente o que está desenhado na tela
-    # ========================================================
-    la   t0, CHAR_POS
-    lh   t5, 0(t0)
-    lh   t6, 2(t0)
-    la   t0, OLD_CHAR_POS
-    sh   t5, 0(t0)
-    sh   t6, 2(t0)
 
-    # ========================================================
-    # 4) LÊ O TECLADO (Agora sim, se mover, muda apenas CHAR_POS)
-    # ========================================================
-    addi sp, sp, -4
-    sw   ra, 0(sp)
-    call KEY
-    lw   ra, 0(sp)
-    addi sp, sp, 4
+addi sp, sp, -4	#Salvar o ra para o call a tecla
+sw   ra, 0(sp)
+call tecla
+lw   ra, 0(sp)
+addi sp, sp, 4
 
-    # 5) Seleciona o sprite baseado no 'playerstate'
-    lw   t2, playerstate
-    li   t3, 12
-    mul  t2, t2, t3
-    la   t1, player_state_sprite
-    add  t1, t1, t2
-    lw   a0, 0(t1)              # endereço do sprite
-    lw   a4, 4(t1)              # largura
-    lw   a5, 8(t1)              # altura
 
-    # ========================================================
-    # 6) DESENHA O PLAYER NA NOVA POSIÇÃO
-    # ========================================================
-    la   t0, CHAR_POS
-    lh   a1, 0(t0)
-    lh   a2, 2(t0)
-    mv   a3, s3                 # desenha no frame de trabalho
+#Ler o status atual do player
+lw t2 , PLAYER_STATE	#Le o status do player atual e aramzzena em t2
+li t3, 12	#Variavel 12
+mul t4, t3, t2	#Multiplica o staus por 12
 
-    addi sp, sp, -4
-    sw   ra, 0(sp)
-    call Print
-    lw   ra, 0(sp)
-    addi sp, sp, 4
+#De acordo com staus selecione o frame a ser carregado armazenado o offset 0, 4, 8
+la t0, player_state_sprite	#Carrega em t0 o endereço de player_state_sprite
+add t0, t0, t4
+lw a0, 0(t0)		#Aramzena em a0 o sprite
+lw a3, 4(t0)		#Aramzena em a3 a largura
+lw a4, 8(t0)		#Aramzena em a4 a altura
 
-    # ========================================================
-    # 7) ATUALIZA O DISPLAY (Troca os frames)
-    # ========================================================
-    li   t0, 0xFF200604
-    sw   s3, 0(t0)
+#Funcao para printar o player na tela
+la t0, CHAR_POS
+lh a1, 0(t0)	#Aramzeno em a1 o x
+lh a2, 2(t0)	#Aramzeno em a2 o y
+mv a5, s3
 
-    # O frame de trabalho vira o visível
-    mv   s0, s3
+addi sp, sp, -4	#Salvar o ra para o call a print
+sw   ra, 0(sp)
+call Print
+lw   ra, 0(sp)
+addi sp, sp, 4
 
-    j    GAME_LOOP
-KEY:
-    li   t0, 0xFF200000
-    lw   t1, 0(t0)
-    andi t1, t1, 0x0001
-    beq  t1, zero, KEY_FIM
+#Alterna entre os frames 0 e 1 
+li   t0, 0xFF200604		#Endereco nase
+sw   s3, 0(t0)		#Leio o endereco e aramzeno em s3
+mv   s0, s3		#Movo para s0 oque esta em s3 para alterna o frame no xori
 
-    lw   t2, 4(t0)              # código da tecla
 
-    la   t0, CHAR_POS
-    lh   t3, 0(t0)              # x → t3
-    lh   t4, 2(t0)              # y → t4
 
-    li   t5, 'w'
-    beq  t2, t5, MOVER_CIMA
-    li   t5, 's'
-    beq  t2, t5, MOVER_BAIXO
-    li   t5, 'a'
-    beq  t2, t5, MOVER_ESQUERDA
-    li   t5, 'd'
-    beq  t2, t5, MOVER_DIREITA
-    j    KEY_FIM
+j game_loop
 
-MOVER_CIMA:
-    addi t4, t4, -8
-    blt  t4, zero, KEY_FIM
-    la   t0, CHAR_POS
-    sh   t4, 2(t0)
-    li   t5, 1
-    la   t6, playerstate
-    sw   t5, 0(t6)
-    j    KEY_FIM
+tecla:
 
-MOVER_BAIXO:
-    addi t4, t4, 8
-    li   t5, 223
-    bgt  t4, t5, KEY_FIM
-    la   t0, CHAR_POS
-    sh   t4, 2(t0)
-    li   t5, 0
-    la   t6, playerstate
-    sw   t5, 0(t6)
-    j    KEY_FIM
+li t0, 0xFF200000	#Carregar em t0 o endereco do teclado
+lw t1, 0(t0)	#Aramzenar em t1 o endereço do teclado
 
-MOVER_ESQUERDA:
-    addi t3, t3, -8
-    blt  t3, zero, KEY_FIM
-    la   t0, CHAR_POS
-    sh   t3, 0(t0)
-    li   t5, 3
-    la   t6, playerstate
-    sw   t5, 0(t6)
-    j    KEY_FIM
+andi t1, t1, 1	#Se for 0 entao and 0 + 0 = 0 mas se for 1 entao and 1 + 1 = 1
 
-MOVER_DIREITA:
-    addi t3, t3, 8
-    li   t5, 303
-    bgt  t3, t5, KEY_FIM
-    la   t0, CHAR_POS
-    sh   t3, 0(t0)
-    li   t5, 2
-    la   t6, playerstate
-    sw   t5, 0(t6)
-    j    KEY_FIM
+beq t1, zero, tecla_fim		#Se t0 = 0 entao nao apertou nenhuma tecla e pula
 
-KEY_FIM:
-    ret
+lw t2, 4(t0)	#Como t0 aramzena 4 bytes eu pulo e armazeno o endereço da tecla em t2
+
+li t3, 'w'
+beq t2, t3 , mover_cima		#Se tecla = w pula para mover cima
+
+li t3, 'a'
+beq t2, t3 , mover_esquerda	#Se tecla = a pula para mover esquerda
+
+li t3, 's'
+beq t2, t3 , mover_baixo	#Se tecla = s pula para mover baixo
+
+li t3, 'd'
+beq t2, t3 , mover_direita	#Se tecla = d pula para mover direita
+
+ret			#Retorna para a funcao chamadora o game_loop
+
+
+mover_cima:
+
+la t0, CHAR_POS		#Pegando o endereço da posição do jogador
+lh t1, 2(t0)		#ler da memoria o offset 2 = y
+addi t1, t1, -8		#Subtrai -8  pixels
+blt t1, zero, tecla_fim	#Se y < 0 entao nao muda a posição 
+sh t1, 2(t0)		#Guarda a nova posição no offset 2 = y
+
+la t0, PLAYER_STATE	#Pegando o endereço do status do player
+li t1, 1		#Guarda em t1 o valor 1
+sw t1, 0(t0)		#Muda o valor do player state
+
+ret
+
+mover_esquerda:
+
+la t0, CHAR_POS		#Pegando o endereço da posição do jogador
+lh t1, 0(t0)		#ler da memoria o offset 0 = x
+addi t1, t1, -8
+blt t1, zero, tecla_fim	#Se x<0 então não muda de posição
+sh t1, 0(t0)		#Guarda a nova posição no offset 0 = x
+
+la t0, PLAYER_STATE	
+li t1, 3
+sw t1, 0(t0)
+
+ret
+
+mover_baixo:
+
+la t0, CHAR_POS		#Pegando o endereço da posição do jogador
+lh t1, 2(t0)		#ler da memoria o offset 2 = y
+addi t1, t1, 8		#Soma 8
+li t4, 223		#Guarda 223 em t4
+bgt t1, t4, tecla_fim	#Se t1>223 então não muda de posição
+sh t1, 2(t0)		#Guarda a nova posição no offset 0 = x
+
+la t0, PLAYER_STATE	
+li t1, 0
+sw t1, 0(t0)
+
+ret	#retorna
+
+
+mover_direita:
+
+la t0, CHAR_POS		#Pegando o endereço da posição do jogador
+lh t1, 0(t0)		#ler da memoria o offset 0 = x
+addi t1, t1, 8		#Soma 8
+li t4, 303		#Guarda em t4 o valor 303
+bgt t1, t4, tecla_fim	#Se t1 > 303 então não muda de posição
+sh t1, 0(t0)		#Guarda a nova posição no offset 0 = x
+
+la t0, PLAYER_STATE	
+li t1, 2
+sw t1, 0(t0)
+
+ret
+
+tecla_fim:
+
+ret	#Retorna para o game_loop
+
 
 .include "funcoes/print.asm"
 .include "funcoes/apagar.asm"
