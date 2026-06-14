@@ -1,4 +1,4 @@
-#FunÃ§Ã£o Print
+#Função Print
 #a0 = endereÃ§o do sprite
 #a1 = x                   
 #a2 = y                                                  
@@ -11,9 +11,9 @@ Print:
 
 li t0, 0xFF0	#Coloco em t0 o endereÃ§o base
 add t0, t0, a5	#Adiciono com o frame se for 0 = 0xff0 se for 1 = 0xff1
-slli t0, t0, 20	#Formato o endereÃ§o
+slli t0, t0, 20	#Formato o endereço
 
-#Calculo para achar o endereÃ§o = offset +(y * 320 + x)
+#Calculo para achar o endereço = offset +(y * 320 + x)
 li t1, 320		#Armazneo em t4 320
 mul t1, a2, t1		#t1 = (320 * y)
 add t1, t1, a1		#t2 + x
