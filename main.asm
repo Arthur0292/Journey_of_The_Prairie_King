@@ -22,12 +22,12 @@ player_state_sprite:
 main:
 
 #.half = 2 bytes
-#Armazenar posiÃ§Ã£o atual do jogador
+#Armazenar posicao atual do jogador
 la t0, CHAR_POS #Armazena em t0 o endereÃ§o do CHAR_POS
 lh t1, 0(t0)	#Le o (offset 0) e armazena em t1
 lh t2, 2(t0)	#Le o (offset 2) e armazena em t2
 
-#Armazenar os valores na posiÃ§Ã£o antiga
+#Armazenar os valores na posicao antiga
 la t0, OLD_CHAR_POS
 sh t1, 0(t0)	
 sh t2, 2(t0)
@@ -62,8 +62,8 @@ call Apagar
 lw   ra, 0(sp)
 addi sp, sp, 4
 
-la t0, OLD_CHAR_POS		#Carrega o endereÃ§o de old_char para t0
-la t1, CHAR_POS			#carrega o endereÃ§o de char para t1
+la t0, OLD_CHAR_POS		#Carrega o endereco de old_char para t0
+la t1, CHAR_POS			#carrega o endereco de char para t1
 lh t2, 0(t1)		#Ler o o valor x de t1 
 sh t2, 0(t0)		#Armazena esse valor no old_char
 lh t2, 2(t1)		#Ler o o valor y de t1
@@ -138,11 +138,11 @@ ret			#Retorna para a funcao chamadora o game_loop
 
 mover_cima:
 
-la t0, CHAR_POS		#Pegando o endereÃ§o da posiÃ§Ã£o do jogador
+la t0, CHAR_POS		#Pegando o endereco da posicao do jogador
 lh t1, 2(t0)		#ler da memoria o offset 2 = y
 addi t1, t1, -8		#Subtrai -8  pixels
 blt t1, zero, tecla_fim	#Se y < 0 entao nao muda a posiÃ§Ã£o 
-sh t1, 2(t0)		#Guarda a nova posiÃ§Ã£o no offset 2 = y
+sh t1, 2(t0)		#Guarda a nova posicao no offset 2 = y
 
 la t0, PLAYER_STATE	#Pegando o endereÃ§o do status do player
 li t1, 1		#Guarda em t1 o valor 1
@@ -166,12 +166,12 @@ ret
 
 mover_baixo:
 
-la t0, CHAR_POS		#Pegando o endereÃ§o da posiÃ§Ã£o do jogador
+la t0, CHAR_POS		#Pegando o endereco da posicao do jogador
 lh t1, 2(t0)		#ler da memoria o offset 2 = y
 addi t1, t1, 8		#Soma 8
 li t4, 223		#Guarda 223 em t4
-bgt t1, t4, tecla_fim	#Se t1>223 entÃ£o nÃ£o muda de posiÃ§Ã£o
-sh t1, 2(t0)		#Guarda a nova posiÃ§Ã£o no offset 0 = x
+bgt t1, t4, tecla_fim	#Se t1>223 entao nao muda de posicao
+sh t1, 2(t0)		#Guarda a nova posicao no offset 0 = x
 
 la t0, PLAYER_STATE	
 li t1, 0
@@ -182,12 +182,12 @@ ret	#retorna
 
 mover_direita:
 
-la t0, CHAR_POS		#Pegando o endereÃ§o da posiÃ§Ã£o do jogador
+la t0, CHAR_POS		#Pegando o endereco da posicao do jogador
 lh t1, 0(t0)		#ler da memoria o offset 0 = x
 addi t1, t1, 8		#Soma 8
 li t4, 303		#Guarda em t4 o valor 303
-bgt t1, t4, tecla_fim	#Se t1 > 303 entÃ£o nÃ£o muda de posiÃ§Ã£o
-sh t1, 0(t0)		#Guarda a nova posiÃ§Ã£o no offset 0 = x
+bgt t1, t4, tecla_fim	#Se t1 > 303 entao nao muda de posicao
+sh t1, 0(t0)		#Guarda a nova posicao no offset 0 = x
 
 la t0, PLAYER_STATE	
 li t1, 2
