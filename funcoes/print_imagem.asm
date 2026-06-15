@@ -9,7 +9,7 @@ add t0, t0, a1	#Adiciono com o frame se for 0 = 0xff0 se for 1 = 0xff1
 slli t0, t0, 20	#Formato o endereço
 
 mv t6, a0	#Movo para t6 o endereco base da imagem
-addi t6, t6, 8
+addi t6, t6, 8 #Pulo a altura e largura
 li a3, 320
 li a4, 240
 
