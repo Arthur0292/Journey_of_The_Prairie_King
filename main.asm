@@ -26,10 +26,10 @@ player_state_sprite:
     .word sprite_esquerda_dados, 17, 17
     
 tiro_sprite:
-	.word sprite_tiro_cima_dados, 8, 10
-	.word sprite_tiro_baixo_dados, 8, 10
-	.word sprite_tiro_direita_dados, 8, 10
-	.word sprite_tiro_esquerda_dados, 8, 10
+	.word sprite_tiro_cima_dados, 6, 6
+	.word sprite_tiro_baixo_dados, 6, 6
+	.word sprite_tiro_direita_dados, 6, 6
+	.word sprite_tiro_esquerda_dados, 6, 6
 
 .text
 main:
@@ -540,10 +540,10 @@ ecall
 
 .data
 .include "sprites/menu.asm"
-.include "sprites/tiro_cima.asm"
+.include "sprites/tiro_frente.asm"
 .include "sprites/tiro_esquerda.asm"
 .include "sprites/tiro_direita.asm"
-.include "sprites/tiro_baixo.asm"
+.include "sprites/tiro_costas.asm"
 .include "sprites/cenario1.asm"
 .include "sprites/frente.asm"
 .include "sprites/costas.asm"
