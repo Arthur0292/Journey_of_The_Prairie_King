@@ -7,9 +7,9 @@
 
 Apagar:
 
-li t0, 0xFF0	#Coloco em t0 o endereÃ§o base
+li t0, 0xFF0	#Coloco em t0 o endereco base
 add t0, t0, a5	#Adiciono com o frame se for 0 = 0xff0 se for 1 = 0xff1
-slli t0, t0, 20	#Formato o endereÃ§o
+slli t0, t0, 20	#Formato o endereco
 
 #Calculo para achar o endereço = offset +(y * 320 + x)
 li t4, 320		#Armazneo em t4 320
