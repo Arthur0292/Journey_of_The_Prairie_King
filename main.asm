@@ -7,8 +7,15 @@
 
 .data
 
-OLD_CHAR_POS: .half 150, 120
+OLD_CHAR_POS: .half 150, 120	#Definir a posicao do player
 CHAR_POS: .half 150, 120
+
+TIRO_POS: .half 0, 0	#Definir a posicao dos tiros
+TIRO_OLD_POS:	.half 0, 0
+
+
+TIRO_DIR: .word 0
+TIRO_ATIVO: .word 0
 
 PLAYER_STATE: .word 0	# 0 = frente, 1 = costas, 2 = direita, 3 = esquerda
 
@@ -17,6 +24,12 @@ player_state_sprite:
     .word sprite_costas_dados,   17, 17
     .word sprite_direita_dados,  17, 17
     .word sprite_esquerda_dados, 17, 17
+    
+tiro_sprite:
+	.word sprite_tiro_cima_dados, 8, 10
+	.word sprite_tiro_baixo_dados, 8, 10
+	.word sprite_tiro_direita_dados, 8, 10
+	.word sprite_tiro_esquerda_dados, 8, 10
 
 .text
 main:
@@ -99,6 +112,8 @@ game_loop:
 
 xori s3, s0, 1	#Alterna o frame 
 
+
+#Atualizar posicoes do jogador
 la t0, OLD_CHAR_POS	#Carrego em t0 o OLD_CHAR_POS
 lh a1, 0(t0)		#Coloco em t0 o endereco do offset 0 = x
 lh a2, 2(t0)		#Coloco em t0 o endereco do offset 2 = y
@@ -127,13 +142,175 @@ lw   ra, 0(sp)
 addi sp, sp, 4
 
 
+#Tiro do player
+#verifico se tiro esta ativo ou nao
+la t0, TIRO_ATIVO
+lw t6, 0(t0)
+beq t6, zero, pula_tiro
+
+la t0, TIRO_OLD_POS	#carrego a posicao antiga do tiro
+lh a1, 0(t0)		#armazeno em a1 o x
+lh a2, 2(t0)		#aramzeno em a2 o y
+mv a5, s3	#Armazeno o frame de trabalho
+
+addi sp, sp, -4	#Salvar o ra para o call a apagar_tiro
+sw   ra, 0(sp)
+call Apagar_tiro
+lw   ra, 0(sp)
+addi sp, sp, 4
+
+la t1, TIRO_POS	#carrego a posicao nova do tiro
+la t0, TIRO_OLD_POS	#carrego a posicao antiga 
+#Armazen a posicao nova na antiga
+lh t2, 0(t1)	
+sh t2, 0(t0)	
+lh t2, 2(t1)		
+sh t2, 2(t0)
+
+
+la t0, TIRO_DIR	#carrega direcao do tiro
+lw t2, 0(t0)
+
+beq t2, zero, cima_tiro	#se for 0 = cima
+
+li t3, 1
+beq t2, t3, baixo_tiro	#se for 1 = baixo
+
+li t3, 2
+beq t2, t3, direita_tiro	#se for 2 = direita
+
+j esquerda_tiro
+
+cima_tiro:
+
+la t0, TIRO_POS	#carrego o endereco
+lh t1, 2(t0)	#leio o y
+addi t1, t1, -5	#subtraio
+li t4, 10		#Variavel para colisao
+blt t1, t4, desativar_tiro
+sh t1, 2(t0)		#Guarda a nova posicao no offset 2 = y
+
+la t0, TIRO_DIR	#carrega o sprite do tiro
+lw t2, 0(t0)
+li t3, 12
+mul t2, t2, t3
+la t1, tiro_sprite
+add t1, t1, t2
+lw a0, 0(t1)    # sprite
+
+la t0, TIRO_POS	#carrega o posicao atual do tiro
+lh a1, 0(t0)    # x
+lh a2, 2(t0)    # y
+mv a3, s3       # frame
+
+addi sp, sp, -4	#salva o ra e chama o print
+sw   ra, 0(sp)
+call Print_tiro
+lw   ra, 0(sp)
+addi sp, sp, 4
+
+j pula_tiro
+
+
+baixo_tiro:
+
+la t0, TIRO_POS	#carrego o endereco
+lh t1, 2(t0)	#leio o y
+addi t1, t1, 5	#adiciono
+li t4, 230		#Variavel para colisao
+bgt t1, t4, desativar_tiro
+sh t1, 2(t0)		#Guarda a nova posicao no offset 2 = y
+
+la t0, TIRO_DIR	#carrega o sprite do tiro
+lw t2, 0(t0)
+li t3, 12
+mul t2, t2, t3
+la t1, tiro_sprite
+add t1, t1, t2
+lw a0, 0(t1)    # sprite
+
+la t0, TIRO_POS	#carrega o posicao atual do tiro
+lh a1, 0(t0)    # x
+lh a2, 2(t0)    # y
+mv a3, s3       # frame
+
+addi sp, sp, -4	#salva o ra e chama o print
+sw   ra, 0(sp)
+call Print_tiro
+lw   ra, 0(sp)
+addi sp, sp, 4
+
+j pula_tiro
+
+direita_tiro:
+
+la t0, TIRO_POS	#carrego o endereco
+lh t1, 0(t0)	#leio o x
+addi t1, t1, 5	#adiciono
+li t4, 330		#Variavel para colisao
+bgt t1, t4, desativar_tiro
+sh t1, 0(t0)		#Guarda a nova posicao no offset 2 = y
+
+la t0, TIRO_DIR	#carrega o sprite do tiro
+lw t2, 0(t0)
+li t3, 12
+mul t2, t2, t3
+la t1, tiro_sprite
+add t1, t1, t2
+lw a0, 0(t1)    # sprite
+
+la t0, TIRO_POS	#carrega o posicao atual do tiro
+lh a1, 0(t0)    # x
+lh a2, 2(t0)    # y
+mv a3, s3       # frame
+
+addi sp, sp, -4	#salva o ra e chama o print
+sw   ra, 0(sp)
+call Print_tiro
+lw   ra, 0(sp)
+addi sp, sp, 4
+
+j pula_tiro
+
+esquerda_tiro:
+
+la t0, TIRO_POS	#carrego o endereco
+lh t1, 0(t0)	#leio o x
+addi t1, t1, -5	#adiciono
+li t4, 10		#Variavel para colisao
+blt t1, t4, desativar_tiro
+sh t1, 0(t0)		#Guarda a nova posicao no offset 2 = y
+
+la t0, TIRO_DIR	#carrega o sprite do tiro
+lw t2, 0(t0)
+li t3, 12
+mul t2, t2, t3
+la t1, tiro_sprite
+add t1, t1, t2
+lw a0, 0(t1)    # sprite
+
+la t0, TIRO_POS	#carrega o posicao atual do tiro
+lh a1, 0(t0)    # x
+lh a2, 2(t0)    # y
+mv a3, s3       # frame
+
+addi sp, sp, -4	#salva o ra e chama o print
+sw   ra, 0(sp)
+call Print_tiro
+lw   ra, 0(sp)
+addi sp, sp, 4
+
+j pula_tiro
+
+
+pula_tiro:
 #Ler o status atual do player
 lw t2 , PLAYER_STATE	#Le o status do player atual e aramzzena em t2
 li t3, 12	#Variavel 12
 mul t4, t3, t2	#Multiplica o status por 12
 
-#De acordo com staus selecione o frame a ser carregado armazenado o offset 0, 4, 8
-la t0, player_state_sprite	#Carrega em t0 o endereÃ§o de player_state_sprite
+#De acordo com status selecione o frame a ser carregado armazenado o offset 0, 4, 8
+la t0, player_state_sprite	#Carrega em t0 o endereco de player_state_sprite
 add t0, t0, t4
 lw a0, 0(t0)		#Aramzena em a0 o sprite
 lw a3, 4(t0)		#Aramzena em a3 a largura
@@ -145,6 +322,8 @@ lh a1, 0(t0)	#Aramzeno em a1 o x
 lh a2, 2(t0)	#Aramzeno em a2 o y
 mv a5, s3
 
+
+
 addi sp, sp, -4	#Salvar o ra para o call a print
 sw   ra, 0(sp)
 call Print
@@ -155,8 +334,6 @@ addi sp, sp, 4
 li   t0, 0xFF200604		#Endereco nase
 sw   s3, 0(t0)		#Leio o endereco e aramzeno em s3
 mv   s0, s3		#Movo para s0 oque esta em s3 para alterna o frame no xori
-
-
 
 j game_loop
 
@@ -170,6 +347,19 @@ andi t1, t1, 1	#Se for 0 entao and 0 + 0 = 0 mas se for 1 entao and 1 + 1 = 1
 beq t1, zero, tecla_fim		#Se t0 = 0 entao nao apertou nenhuma tecla e pula
 
 lw t2, 4(t0)	#Como t0 aramzena 4 bytes eu pulo e armazeno o endereÃ§o da tecla em t2
+
+li t5, 'i'	#Se tecla for setinha pra cima pula para tiro_cima
+beq t2, t5, tiro_cima
+
+li t5, 'k'	#se tecla for stinha pra baixo pula para tiro_baixo
+beq t2, t5, tiro_baixo
+
+li t5, 'j'	#se tecla for setinha pra esquerda pula ṕara tiro_esquerda
+beq t2, t5, tiro_esquerda
+
+li t5, 'l'	#se tecla for setinha pra direita pula pra tiro_direita
+beq t2, t5,tiro_direita
+
 
 li t3, 'w'
 beq t2, t3 , mover_cima		#Se tecla = w pula para mover cima
@@ -247,23 +437,113 @@ sw t1, 0(t0)
 
 ret
 
+tiro_cima:
+
+la t0, CHAR_POS	#Pegar a posicao atual do jogador
+lh t1, 0(t0)	#pegar o x
+lh t2, 2(t0)	#pegar o y
+
+la t0, TIRO_POS	#trocar de acordo com a posicao do player o x e y
+sh t1, 0(t0)
+sh t2, 2(t0)
+
+la t0, TIRO_DIR	#defino a posicao do tiro
+li t1, 0
+sw t1, 0(t0)
+
+la t0, TIRO_ATIVO	#defino se o tiro esta ativo
+li t1, 1
+sw t1, 0(t0)
+
+j tecla_fim
+
+tiro_baixo:
+
+la t0, CHAR_POS	#Pegar a posicao atual do jogador
+lh t1, 0(t0)	#pegar o x
+lh t2, 2(t0)	#pegar o y
+
+la t0, TIRO_POS	#trocar de acordo com a posicao do player o x e y
+sh t1, 0(t0)
+sh t2, 2(t0)
+
+la t0, TIRO_DIR	#defino a posicao do tiro
+li t1, 1
+sw t1, 0(t0)
+
+la t0, TIRO_ATIVO	#defino se o tiro esta ativo
+li t1, 1
+sw t1, 0(t0)
+
+j tecla_fim
+
+tiro_direita:
+
+la t0, CHAR_POS	#Pegar a posicao atual do jogador
+lh t1, 0(t0)	#pegar o x
+lh t2, 2(t0)	#pegar o y
+
+la t0, TIRO_POS	#trocar de acordo com a posicao do player o x e y
+sh t1, 0(t0)
+sh t2, 2(t0)
+
+la t0, TIRO_DIR	#defino a posicao do tiro
+li t1, 2
+sw t1, 0(t0)
+
+la t0, TIRO_ATIVO	#defino se o tiro esta ativo
+li t1, 1
+sw t1, 0(t0)
+
+j tecla_fim
+
+tiro_esquerda:
+
+la t0, CHAR_POS	#Pegar a posicao atual do jogador
+lh t1, 0(t0)	#pegar o x
+lh t2, 2(t0)	#pegar o y
+
+la t0, TIRO_POS	#trocar de acordo com a posicao do player o x e y
+sh t1, 0(t0)
+sh t2, 2(t0)
+
+la t0, TIRO_DIR	#defino a posicao do tiro
+li t1, 3
+sw t1, 0(t0)
+
+la t0, TIRO_ATIVO	#defino se o tiro esta ativo
+li t1, 1
+sw t1, 0(t0)
+
+j tecla_fim
+
 tecla_fim:
 
 ret	#Retorna para o game_loop
 
+desativar_tiro:
+    la t0, TIRO_ATIVO
+    sw zero, 0(t0)
+    j pula_tiro
+    
 fim:
 
 li a7, 10	#Encerra o jogo
 ecall
 
 
-
+.include "funcoes/print_tiro.asm"
+.include "funcoes/apagar_tiro.asm"
 .include "funcoes/print.asm"
 .include "funcoes/apagar.asm"
 .include "funcoes/print_imagem.asm"
 
 .data
 .include "sprites/menu.asm"
+.include "sprites/tiro_frente.asm"
+.include "sprites/tiro_esquerda.asm"
+.include "sprites/tiro_direita.asm"
+.include "sprites/tiro_costas.asm"
 .include "sprites/cenario1.asm"
 .include "sprites/frente.asm"
 .include "sprites/costas.asm"
