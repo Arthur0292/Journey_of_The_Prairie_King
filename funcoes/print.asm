@@ -1,5 +1,5 @@
 #Função Print
-#a0 = endereÃ§o do sprite
+#a0 = endereco do sprite
 #a1 = x                   
 #a2 = y                                                  
 #a3 = largura                                            
