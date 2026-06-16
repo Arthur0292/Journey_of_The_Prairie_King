@@ -7,8 +7,8 @@
 
 Apagar_tiro:
 
-li a3, 8	#Largura e altura do tiro
-li a4, 10                              
+li a3, 5	#Largura e altura do tiro
+li a4, 5                              
 
 li t0, 0xFF0	#Coloco em t0 o endereco base
 add t0, t0, a5	#Adiciono com o frame se for 0 = 0xff0 se for 1 = 0xff1
@@ -25,7 +25,7 @@ sub t3, t4, a3	#Aramzeno em t3 o stride que e 320 - 8
 li t1, 0		#Contador para as linhas
 li t2, 0		#Contador para as colunas
 
-li t6, 0	#Coloco a cor do cenario para imprimir
+li t6, 58	#Coloco a cor do cenario para imprimir
 Apagar_tiro_linha:
 
 sb t6, 0(t0)	#Printo o pixel na tela
@@ -41,7 +41,6 @@ addi t1, t1, 1		#linhas++
 blt t1, a4, Apagar_tiro_linha	#enquanto t1 for menor que a altura
 
 ret		#retorno
-
 
 
 
