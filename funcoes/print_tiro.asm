@@ -6,8 +6,8 @@
 
 Print_tiro:
 
-li a4, 8	#Largura e altura do tiro
-li t4, 10
+li a4, 5 #Largura e altura do tiro
+li t4, 5
 
 
 li t0, 0xFF0	#Coloco em t0 o endereco base
