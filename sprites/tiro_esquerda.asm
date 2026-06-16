@@ -1,7 +1,7 @@
 .data
 .globl sprite_tiro_esquerda_dados
 
-sprite_tiro_tras_dados:
+sprite_tiro_esquerda_dados:
     .byte 58,58,58,58,58,58,58,58
     .byte 58,58,58,58,58,58,58,58
     .byte 58,58,109,109,109,109,109,58
