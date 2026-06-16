@@ -26,10 +26,10 @@ player_state_sprite:
     .word sprite_esquerda_dados, 17, 17
     
 tiro_sprite:
-	.word sprite_tiro_cima_dados, 6, 6
-	.word sprite_tiro_baixo_dados, 6, 6
-	.word sprite_tiro_direita_dados, 6, 6
-	.word sprite_tiro_esquerda_dados, 6, 6
+	.word sprite_tiro_cima_dados, 5, 5
+	.word sprite_tiro_baixo_dados, 5, 5
+	.word sprite_tiro_direita_dados, 5, 5
+	.word sprite_tiro_esquerda_dados, 5, 5
 
 .text
 main:
