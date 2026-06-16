@@ -540,10 +540,10 @@ ecall
 
 .data
 .include "sprites/menu.asm"
-.include "sprites/tiro_frente.asm"
+.include "sprites/tiro_cima.asm"
 .include "sprites/tiro_esquerda.asm"
 .include "sprites/tiro_direita.asm"
-.include "sprites/tiro_costas.asm"
+.include "sprites/tiro_baixo.asm"
 .include "sprites/cenario1.asm"
 .include "sprites/frente.asm"
 .include "sprites/costas.asm"
