@@ -1,5 +1,5 @@
 .data
-.globl sprite_tiro_baixo_dados
+.globl sprite_tiro_cima_dados
 
 sprite_tiro_cima_dados:
      .byte 58,58,58,58,58,58,58,58
