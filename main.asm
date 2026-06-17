@@ -522,9 +522,20 @@ tecla_fim:
 ret	#Retorna para o game_loop
 
 desativar_tiro:
-    la t0, TIRO_ATIVO
-    sw zero, 0(t0)
-    j pula_tiro
+la t0, TIRO_ATIVO	#muda o status do tiro
+sw zero, 0(t0)
+    
+# apaga no frame 0
+la t0, TIRO_POS
+lh a1, 0(t0)
+lh a2, 2(t0)
+li a5, 0
+    call Apagar_tiro
+    
+# apaga no frame 1
+li a5, 1
+call Apagar_tiro
+j pula_tiro	#pula para pula_tiro
     
 fim:
 
