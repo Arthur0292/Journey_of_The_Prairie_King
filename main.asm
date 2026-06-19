@@ -14,8 +14,9 @@ TIRO_POS: .half 0, 0	#Definir a posicao dos tiros
 TIRO_OLD_POS:	.half 0, 0
 
 
-TIRO_DIR: .word 0
-TIRO_ATIVO: .word 0
+TIROS_POS:   .half 0,0, 0,0, 0,0, 0,0    # 4 pares x,y
+TIROS_DIR:   .word 0, 0, 0, 0             # 4 direções
+TIROS_ATIVO: .word 0, 0, 0, 0             # 4 flags
 
 PLAYER_STATE: .word 0	# 0 = frente, 1 = costas, 2 = direita, 3 = esquerda
 
@@ -25,11 +26,6 @@ player_state_sprite:
     .word sprite_direita_dados,  17, 17
     .word sprite_esquerda_dados, 17, 17
     
-tiro_sprite:
-	.word sprite_tiro_cima_dados, 5, 5
-	.word sprite_tiro_baixo_dados, 5, 5
-	.word sprite_tiro_direita_dados, 5, 5
-	.word sprite_tiro_esquerda_dados, 5, 5
 
 .text
 main:
@@ -190,13 +186,7 @@ li t4, 10		#Variavel para colisao
 blt t1, t4, desativar_tiro
 sh t1, 2(t0)		#Guarda a nova posicao no offset 2 = y
 
-la t0, TIRO_DIR	#carrega o sprite do tiro
-lw t2, 0(t0)
-li t3, 12
-mul t2, t2, t3
-la t1, tiro_sprite
-add t1, t1, t2
-lw a0, 0(t1)    # sprite
+la a0, sprite_tiro_dados
 
 la t0, TIRO_POS	#carrega o posicao atual do tiro
 lh a1, 0(t0)    # x
@@ -221,13 +211,7 @@ li t4, 230		#Variavel para colisao
 bgt t1, t4, desativar_tiro
 sh t1, 2(t0)		#Guarda a nova posicao no offset 2 = y
 
-la t0, TIRO_DIR	#carrega o sprite do tiro
-lw t2, 0(t0)
-li t3, 12
-mul t2, t2, t3
-la t1, tiro_sprite
-add t1, t1, t2
-lw a0, 0(t1)    # sprite
+la a0, sprite_tiro_dados
 
 la t0, TIRO_POS	#carrega o posicao atual do tiro
 lh a1, 0(t0)    # x
@@ -251,13 +235,7 @@ li t4, 300		#Variavel para colisao
 bgt t1, t4, desativar_tiro
 sh t1, 0(t0)		#Guarda a nova posicao no offset 2 = y
 
-la t0, TIRO_DIR	#carrega o sprite do tiro
-lw t2, 0(t0)
-li t3, 12
-mul t2, t2, t3
-la t1, tiro_sprite
-add t1, t1, t2
-lw a0, 0(t1)    # sprite
+la a0, sprite_tiro_dados
 
 la t0, TIRO_POS	#carrega o posicao atual do tiro
 lh a1, 0(t0)    # x
@@ -281,13 +259,7 @@ li t4, 20		#Variavel para colisao
 blt t1, t4, desativar_tiro
 sh t1, 0(t0)		#Guarda a nova posicao no offset 2 = y
 
-la t0, TIRO_DIR	#carrega o sprite do tiro
-lw t2, 0(t0)
-li t3, 12
-mul t2, t2, t3
-la t1, tiro_sprite
-add t1, t1, t2
-lw a0, 0(t1)    # sprite
+la a0, sprite_tiro_dados
 
 la t0, TIRO_POS	#carrega o posicao atual do tiro
 lh a1, 0(t0)    # x
@@ -551,10 +523,7 @@ ecall
 
 .data
 .include "sprites/menu.asm"
-.include "sprites/tiro_frente.asm"
-.include "sprites/tiro_esquerda.asm"
-.include "sprites/tiro_direita.asm"
-.include "sprites/tiro_costas.asm"
+.include "sprites/tiro.asm"
 .include "sprites/cenario1.asm"
 .include "sprites/frente.asm"
 .include "sprites/costas.asm"
