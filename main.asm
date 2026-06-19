@@ -14,9 +14,8 @@ TIRO_POS: .half 0, 0	#Definir a posicao dos tiros
 TIRO_OLD_POS:	.half 0, 0
 
 
-TIROS_POS:   .half 0,0, 0,0, 0,0, 0,0    # 4 pares x,y
-TIROS_DIR:   .word 0, 0, 0, 0             # 4 direções
-TIROS_ATIVO: .word 0, 0, 0, 0             # 4 flags
+TIRO_DIR: .word 0
+TIRO_ATIVO: .word 0
 
 PLAYER_STATE: .word 0	# 0 = frente, 1 = costas, 2 = direita, 3 = esquerda
 
