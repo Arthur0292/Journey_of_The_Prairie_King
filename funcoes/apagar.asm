@@ -23,7 +23,7 @@ sub t3, t4, a3	#Aramzeno em t3 o stride que e 320- 17
 li t1, 0		#Contador para as linhas
 li t2, 0		#Contador para as colunas
 
-li t6, 58	#Coloco a cor do cenario para imprimir
+li t6, 34	#Coloco a cor do cenario para imprimir
 Apagar_linha:
 
 sb t6, 0(t0)	#Printo o pixel na tela
