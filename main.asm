@@ -44,6 +44,14 @@ la t0, OLD_CHAR_POS
 sh t1, 0(t0)	
 sh t2, 2(t0)
 
+# Inicializar posição do tiro com posição do player
+la t0, TIRO_POS
+sh t1, 0(t0)
+sh t2, 2(t0)
+la t0, TIRO_OLD_POS
+sh t1, 0(t0)
+sh t2, 2(t0)
+
 li s0, 0
 
 la a0, MENU_DATA	#Carrega o endereco do menu
@@ -501,7 +509,7 @@ la t0, TIRO_POS
 lh a1, 0(t0)
 lh a2, 2(t0)
 li a5, 0
-    call Apagar_tiro
+call Apagar_tiro
     
 # apaga no frame 1
 li a5, 1
