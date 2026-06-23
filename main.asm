@@ -45,7 +45,7 @@ la t0, OLD_CHAR_POS
 sh t1, 0(t0)	
 sh t2, 2(t0)
 
-# Inicializar posição do tiro com posição do player
+# Inicializar posiÃ§Ã£o do tiro com posiÃ§Ã£o do player
 la t0, TIRO_POS
 sh t1, 0(t0)
 sh t2, 2(t0)
@@ -83,7 +83,7 @@ andi t1, t1, 1	#Se for 0 entao and 0 + 0 = 0 mas se for 1 entao and 1 + 1 = 1
 
 beq t1, zero, menu		#Se t0 = 0 entao nao apertou nenhuma tecla e pula
 
-lw t2, 4(t0)	#Como t0 aramzena 4 bytes eu pulo e armazeno o endereÃ§o da tecla em t2
+lw t2, 4(t0)	#Como t0 aramzena 4 bytes eu pulo e armazeno o endereÃƒÂ§o da tecla em t2
 
 li t3, '1'
 beq t2, t3 , continua	#Se tecla = 1 continua
@@ -131,8 +131,8 @@ call Apagar
 lw   ra, 0(sp)
 addi sp, sp, 4
 
-la t0, OLD_CHAR_POS		#Carrega o endereÃ§o de old_char para t0
-la t1, CHAR_POS			#carrega o endereÃ§o de char para t1
+la t0, OLD_CHAR_POS		#Carrega o endereÃƒÂ§o de old_char para t0
+la t1, CHAR_POS			#carrega o endereÃƒÂ§o de char para t1
 lh t2, 0(t1)		#Ler o o valor x de t1 
 sh t2, 0(t0)		#Armazena esse valor no old_char
 lh t2, 2(t1)		#Ler o o valor y de t1
@@ -263,7 +263,7 @@ esquerda_tiro:
 la t0, TIRO_POS	#carrego o endereco
 lh t1, 0(t0)	#leio o x
 addi t1, t1, -5	#adiciono
-li t4, 80		#Variavel para colisao
+li t4, 85		#Variavel para colisao
 blt t1, t4, desativar_tiro
 sh t1, 0(t0)		#Guarda a nova posicao no offset 2 = y
 
@@ -326,7 +326,7 @@ andi t1, t1, 1	#Se for 0 entao and 0 + 0 = 0 mas se for 1 entao and 1 + 1 = 1
 
 beq t1, zero, tecla_fim		#Se t0 = 0 entao nao apertou nenhuma tecla e pula
 
-lw t2, 4(t0)	#Como t0 aramzena 4 bytes eu pulo e armazeno o endereÃ§o da tecla em t2
+lw t2, 4(t0)	#Como t0 aramzena 4 bytes eu pulo e armazeno o endereÃƒÂ§o da tecla em t2
 
 li t5, 'i'	#Se tecla for setinha pra cima pula para tiro_cima
 beq t2, t5, tiro_cima
@@ -334,7 +334,7 @@ beq t2, t5, tiro_cima
 li t5, 'k'	#se tecla for stinha pra baixo pula para tiro_baixo
 beq t2, t5, tiro_baixo
 
-li t5, 'j'	#se tecla for setinha pra esquerda pula ṕara tiro_esquerda
+li t5, 'j'	#se tecla for setinha pra esquerda pula á¹•ara tiro_esquerda
 beq t2, t5, tiro_esquerda
 
 li t5, 'l'	#se tecla for setinha pra direita pula pra tiro_direita
@@ -377,7 +377,7 @@ la t0, CHAR_POS		#Pegando o endereco da posicao do jogador
 lh t1, 0(t0)		#ler da memoria o offset 0 = x
 addi t1, t1, -8		#Mudar o x
 li t4, 80		#variavel para colisao
-blt t1, t4, tecla_fim	#Se x<80 entao nao muda de posiÃ§Ã£o
+blt t1, t4, tecla_fim	#Se x<80 entao nao muda de posiÃƒÂ§ÃƒÂ£o
 sh t1, 0(t0)		#Guarda a nova posicao no offset 0 = x
 
 la t0, PLAYER_STATE	
@@ -391,7 +391,7 @@ mover_baixo:
 la t0, CHAR_POS		#Pegando o endereco da posicao do jogador
 lh t1, 2(t0)		#ler da memoria o offset 2 = y
 addi t1, t1, 8		#Soma 8
-li t4, 216		#Guarda 216 em t4 para colisao
+li t4, 215		#Guarda 216 em t4 para colisao
 bgt t1, t4, tecla_fim	#Se t1>216 entao nao muda de posicao
 sh t1, 2(t0)		#Guarda a nova posicao no offset 0 = x
 
