@@ -376,8 +376,8 @@ mover_esquerda:
 la t0, CHAR_POS		#Pegando o endereco da posicao do jogador
 lh t1, 0(t0)		#ler da memoria o offset 0 = x
 addi t1, t1, -8		#Mudar o x
-li t4, 17		#variavel para colisao
-blt t1, t4, tecla_fim	#Se x<17 entao nao muda de posiÃ§Ã£o
+li t4, 80		#variavel para colisao
+blt t1, t4, tecla_fim	#Se x<80 entao nao muda de posiÃ§Ã£o
 sh t1, 0(t0)		#Guarda a nova posicao no offset 0 = x
 
 la t0, PLAYER_STATE	
