@@ -516,6 +516,11 @@ call Apagar_tiro
 li a5, 1
 call Apagar_tiro
 j pula_tiro	#pula para pula_tiro
+
+game_over:
+
+li a7, 10
+ecall
     
 fim:
 
