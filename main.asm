@@ -19,12 +19,13 @@ TIRO_ATIVO: .word 0
 
 PLAYER_STATE: .word 0	# 0 = frente, 1 = costas, 2 = direita, 3 = esquerda
 
+player_vida: .word 0
+
 player_state_sprite:
     .word sprite_frente_dados,   17, 17
     .word sprite_costas_dados,   17, 17
     .word sprite_direita_dados,  17, 17
-    .word sprite_esquerda_dados, 17, 17
-    
+    .word sprite_esquerda_dados, 17, 17 
 
 .text
 main:
