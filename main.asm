@@ -263,7 +263,7 @@ esquerda_tiro:
 la t0, TIRO_POS	#carrego o endereco
 lh t1, 0(t0)	#leio o x
 addi t1, t1, -5	#adiciono
-li t4, 20		#Variavel para colisao
+li t4, 80		#Variavel para colisao
 blt t1, t4, desativar_tiro
 sh t1, 0(t0)		#Guarda a nova posicao no offset 2 = y
 
