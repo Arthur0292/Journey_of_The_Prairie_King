@@ -189,7 +189,7 @@ cima_tiro:
 
 la t0, TIRO_POS	#carrego o endereco
 lh t1, 2(t0)	#leio o y
-addi t1, t1, -5	#subtraio
+addi t1, t1, -3	#subtraio
 li t4, 10		#Variavel para colisao
 blt t1, t4, desativar_tiro
 sh t1, 2(t0)		#Guarda a nova posicao no offset 2 = y
@@ -214,7 +214,7 @@ baixo_tiro:
 
 la t0, TIRO_POS	#carrego o endereco
 lh t1, 2(t0)	#leio o y
-addi t1, t1, 5	#adiciono
+addi t1, t1, 3	#adiciono
 li t4, 230		#Variavel para colisao
 bgt t1, t4, desativar_tiro
 sh t1, 2(t0)		#Guarda a nova posicao no offset 2 = y
@@ -238,7 +238,7 @@ direita_tiro:
 
 la t0, TIRO_POS	#carrego o endereco
 lh t1, 0(t0)	#leio o x
-addi t1, t1, 5	#adiciono
+addi t1, t1, 3	#adiciono
 li t4, 300		#Variavel para colisao
 bgt t1, t4, desativar_tiro
 sh t1, 0(t0)		#Guarda a nova posicao no offset 2 = y
@@ -262,7 +262,7 @@ esquerda_tiro:
 
 la t0, TIRO_POS	#carrego o endereco
 lh t1, 0(t0)	#leio o x
-addi t1, t1, -5	#adiciono
+addi t1, t1, -3	#adiciono
 li t4, 85		#Variavel para colisao
 blt t1, t4, desativar_tiro
 sh t1, 0(t0)		#Guarda a nova posicao no offset 2 = y
