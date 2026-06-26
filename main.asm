@@ -13,6 +13,19 @@ CHAR_POS: .half 150, 120
 TIRO_POS: .half 0, 0	#Definir a posicao dos tiros
 TIRO_OLD_POS:	.half 0, 0
 
+INIMIGO_SPAWN_POS: .half 195,10, 296,120, 86,120, 195,220 #Definir as posicoes do inimigo
+INIMIGO_POS: .half 195,10, 308,124, 86,124, 195,230 #Definir as posicoes do inimigo
+INIMIGO_OLD_POS: .half 0,0, 0,0, 0,0, 0,0	#posicao antiga do inimigo
+INIMIGO_ATIVO: .word 0, 0, 0, 0	#Inimigo ativo ou nao
+
+inimigo_sprite:	#defini o sprite do inimigo e largura representando(offset 0 a 4)
+.word sprite_inimigo_frente, 16, 20
+.word sprite_inimigo_direita, 16, 20
+.word sprite_inimigo_esquerda, 16, 20
+.word sprite_inimigo_costas, 16, 20
+
+FRAME_COUNTER: .word 0
+SPAWN_INTERVAL: .word 240   #Intervalo de spawner do inimigo
 
 TIRO_DIR: .word 0
 TIRO_ATIVO: .word 0
@@ -21,7 +34,7 @@ PLAYER_STATE: .word 0	# 0 = frente, 1 = costas, 2 = direita, 3 = esquerda
 
 player_vida: .word 0
 
-player_state_sprite:
+player_state_sprite:	#defini o sprite do player e largura
     .word sprite_frente_dados,   17, 17
     .word sprite_costas_dados,   17, 17
     .word sprite_direita_dados,  17, 17
@@ -45,7 +58,7 @@ la t0, OLD_CHAR_POS
 sh t1, 0(t0)	
 sh t2, 2(t0)
 
-# Inicializar posiÃ§Ã£o do tiro com posiÃ§Ã£o do player
+# Inicializar posicao do tiro com posiÃ§Ã£o do player
 la t0, TIRO_POS
 sh t1, 0(t0)
 sh t2, 2(t0)
@@ -116,7 +129,25 @@ game_loop:
 
 xori s3, s0, 1	#Alterna o frame 
 
+la t0, FRAME_COUNTER	#verifica contador de frames
+la t1, SPAWN_INTERVAL
+lw t2, 0(t0)
+lw t3, 0(t1)
+addi t2, t2, 1	#adiciona ao contador
+sw t2, 0(t0)
 
+blt t2, t3, continuar2
+
+sw zero, 0(t0)
+
+addi sp, sp, -4	#Salvar o ra para o call de spawnar os inimigos
+sw   ra, 0(sp)
+call spawnar_inimigos
+lw   ra, 0(sp)
+addi sp, sp, 4
+
+
+continuar2:
 #Atualizar posicoes do jogador
 la t0, OLD_CHAR_POS	#Carrego em t0 o OLD_CHAR_POS
 lh a1, 0(t0)		#Coloco em t0 o endereco do offset 0 = x
@@ -284,6 +315,13 @@ j pula_tiro
 
 
 pula_tiro:
+
+addi sp, sp, -4	#chama a funcao de desenhar os inimigos
+sw   ra, 0(sp)
+call desenhar_inimigos
+lw   ra, 0(sp)
+addi sp, sp, 4
+
 #Ler o status atual do player
 lw t2 , PLAYER_STATE	#Le o status do player atual e aramzzena em t2
 li t3, 12	#Variavel 12
@@ -533,8 +571,14 @@ ecall
 .include "funcoes/print.asm"
 .include "funcoes/apagar.asm"
 .include "funcoes/print_imagem.asm"
+.include "funcoes/spawnar_inimigos.asm"
+.include "funcoes/desenhar_inimigos.asm"
 
 .data
+.include "sprites/inimigo_frente.asm"
+.include "sprites/inimigo_costas.asm"
+.include "sprites/inimigo_esquerda.asm"
+.include "sprites/inimigo_direita.asm"
 .include "sprites/menu.asm"
 .include "sprites/tiro.asm"
 .include "sprites/cenario1.asm"
