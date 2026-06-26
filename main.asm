@@ -34,7 +34,7 @@ PLAYER_STATE: .word 0	# 0 = frente, 1 = costas, 2 = direita, 3 = esquerda
 
 player_vida: .word 0
 
-player_state_sprite:	#defini o sprite do player e largura
+player_state_sprite:	#definir o sprite do player e largura
     .word sprite_frente_dados,   17, 17
     .word sprite_costas_dados,   17, 17
     .word sprite_direita_dados,  17, 17
