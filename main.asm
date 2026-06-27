@@ -16,7 +16,7 @@ TIRO_OLD_POS:	.half 0, 0
 INIMIGO_SPAWN_POS: .half 190,10, 296,110, 86,110, 190,215 #Definir as posicoes do inimigo
 INIMIGO_POS: .half 195,10, 308,124, 86,124, 195,230 #Definir as posicoes do inimigo
 INIMIGO_OLD_POS: .half 0,0, 0,0, 0,0, 0,0	#posicao antiga do inimigo
-INIMIGO_ATIVO: .word 0, 0, 0, 0	#Inimigo ativo ou nao
+INIMIGO_ATIVO: .word 0, 0, 0, 0	#inimigo ativo ou nao
 
 inimigo_sprite:	#defini o sprite do inimigo e largura representando(offset 0 a 4)
 .word sprite_inimigo_frente, 16, 20
@@ -43,7 +43,7 @@ player_state_sprite:	#definir o sprite do player e largura
 .text
 main:
  
-li   t0, 0xFF200604	#Definir o frame inicial do display
+li   t0, 0xFF200604	#definir o frame inicial do display
 li   t1, 1
 sw   t1, 0(t0)
 
@@ -58,7 +58,7 @@ la t0, OLD_CHAR_POS
 sh t1, 0(t0)	
 sh t2, 2(t0)
 
-# Inicializar posicao do tiro com posiÃ§Ã£o do player
+#Inicializar posicao do tiro com posicao do player
 la t0, TIRO_POS
 sh t1, 0(t0)
 sh t2, 2(t0)
@@ -96,7 +96,7 @@ andi t1, t1, 1	#Se for 0 entao and 0 + 0 = 0 mas se for 1 entao and 1 + 1 = 1
 
 beq t1, zero, menu		#Se t0 = 0 entao nao apertou nenhuma tecla e pula
 
-lw t2, 4(t0)	#Como t0 aramzena 4 bytes eu pulo e armazeno o endereÃƒÂ§o da tecla em t2
+lw t2, 4(t0)	#Como t0 aramzena 4 bytes eu pulo e armazeno o endereÃƒÆ’Ã‚Â§o da tecla em t2
 
 li t3, '1'
 beq t2, t3 , continua	#Se tecla = 1 continua
@@ -415,7 +415,7 @@ la t0, CHAR_POS		#Pegando o endereco da posicao do jogador
 lh t1, 0(t0)		#ler da memoria o offset 0 = x
 addi t1, t1, -8		#Mudar o x
 li t4, 80		#variavel para colisao
-blt t1, t4, tecla_fim	#Se x<80 entao nao muda de posiÃƒÂ§ÃƒÂ£o
+blt t1, t4, tecla_fim	#Se x<80 entao nao muda de posiÃƒÆ’Ã‚Â§ÃƒÆ’Ã‚Â£o
 sh t1, 0(t0)		#Guarda a nova posicao no offset 0 = x
 
 la t0, PLAYER_STATE	
