@@ -13,7 +13,7 @@ CHAR_POS: .half 150, 120
 TIRO_POS: .half 0, 0	#Definir a posicao dos tiros
 TIRO_OLD_POS:	.half 0, 0
 
-INIMIGO_SPAWN_POS: .half 195,10, 296,120, 86,120, 195,220 #Definir as posicoes do inimigo
+INIMIGO_SPAWN_POS: .half 190,10, 296,110, 86,110, 190,215 #Definir as posicoes do inimigo
 INIMIGO_POS: .half 195,10, 308,124, 86,124, 195,230 #Definir as posicoes do inimigo
 INIMIGO_OLD_POS: .half 0,0, 0,0, 0,0, 0,0	#posicao antiga do inimigo
 INIMIGO_ATIVO: .word 0, 0, 0, 0	#Inimigo ativo ou nao
@@ -162,8 +162,8 @@ call Apagar
 lw   ra, 0(sp)
 addi sp, sp, 4
 
-la t0, OLD_CHAR_POS		#Carrega o endereÃƒÂ§o de old_char para t0
-la t1, CHAR_POS			#carrega o endereÃƒÂ§o de char para t1
+la t0, OLD_CHAR_POS		#Carrega o endereco de old_char para t0
+la t1, CHAR_POS			#carrega o endereco de char para t1
 lh t2, 0(t1)		#Ler o o valor x de t1 
 sh t2, 0(t0)		#Armazena esse valor no old_char
 lh t2, 2(t1)		#Ler o o valor y de t1
@@ -364,18 +364,18 @@ andi t1, t1, 1	#Se for 0 entao and 0 + 0 = 0 mas se for 1 entao and 1 + 1 = 1
 
 beq t1, zero, tecla_fim		#Se t0 = 0 entao nao apertou nenhuma tecla e pula
 
-lw t2, 4(t0)	#Como t0 aramzena 4 bytes eu pulo e armazeno o endereÃƒÂ§o da tecla em t2
+lw t2, 4(t0)	#Como t0 aramzena 4 bytes eu pulo e armazeno o endereco da tecla em t2
 
-li t5, 'i'	#Se tecla for setinha pra cima pula para tiro_cima
+li t5, 'i'	#Se tecla for i pra cima pula para tiro_cima
 beq t2, t5, tiro_cima
 
-li t5, 'k'	#se tecla for stinha pra baixo pula para tiro_baixo
+li t5, 'k'	#se tecla for k pula para tiro_baixo
 beq t2, t5, tiro_baixo
 
-li t5, 'j'	#se tecla for setinha pra esquerda pula á¹•ara tiro_esquerda
+li t5, 'j'	#se tecla for j pula para tiro_esquerda
 beq t2, t5, tiro_esquerda
 
-li t5, 'l'	#se tecla for setinha pra direita pula pra tiro_direita
+li t5, 'l'	#se tecla for l pula pra tiro_direita
 beq t2, t5,tiro_direita
 
 
@@ -399,8 +399,8 @@ mover_cima:
 la t0, CHAR_POS		#Pegando o endereco da posicao do jogador
 lh t1, 2(t0)		#ler da memoria o offset 2 = y
 addi t1, t1, -8		#Subtrai -8  pixels
-li t4, 7		#Variavel para colisao
-blt t1, t4, tecla_fim	#Se y < 7 entao nao muda a posicao 
+li t4, 16		#Variavel para colisao
+blt t1, t4, tecla_fim	#Se y < 16 entao nao muda a posicao 
 sh t1, 2(t0)		#Guarda a nova posicao no offset 2 = y
 
 la t0, PLAYER_STATE	#Pegando o endereco do status do player
