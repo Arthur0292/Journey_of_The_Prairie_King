@@ -138,7 +138,7 @@ call Print
 lw   ra, 0(sp)
 addi sp, sp, 4
 
-#imprimir a coracao no HUD
+#imprimir a cabeca no HUD
 la a0, sprite_coracao_dados	#Carrego o endereco do coracao
 li a1, 20	#x e y
 li a2, 20
@@ -454,8 +454,8 @@ mover_baixo:
 la t0, CHAR_POS		#Pegando o endereco da posicao do jogador
 lh t1, 2(t0)		#ler da memoria o offset 2 = y
 addi t1, t1, 8		#Soma 8
-li t4, 215		#Guarda 216 em t4 para colisao
-bgt t1, t4, tecla_fim	#Se t1>216 entao nao muda de posicao
+li t4, 215		#Guarda 215 em t4 para colisao
+bgt t1, t4, tecla_fim	#Se t1>215 entao nao muda de posicao
 sh t1, 2(t0)		#Guarda a nova posicao no offset 0 = x
 
 la t0, PLAYER_STATE	
@@ -600,6 +600,9 @@ ecall
 .include "funcoes/desenhar_inimigos.asm"
 
 .data
+.include "sprites/HUD/um.asm"
+.include "sprites/HUD/dois.asm"
+.include "sprites/HUD/tres.asm"
 .include "sprites/HUD/coracao.asm"
 .include "sprites/inimigo_frente.asm"
 .include "sprites/inimigo_costas.asm"
