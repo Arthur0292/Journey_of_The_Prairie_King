@@ -138,7 +138,7 @@ call Print
 lw   ra, 0(sp)
 addi sp, sp, 4
 
-#imprimir a cabeca no HUD
+#imprimir a coracao no HUD
 la a0, sprite_coracao_dados	#Carrego o endereco do coracao
 li a1, 20	#x e y
 li a2, 20
