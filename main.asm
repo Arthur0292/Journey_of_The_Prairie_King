@@ -32,7 +32,15 @@ TIRO_ATIVO: .word 0
 
 PLAYER_STATE: .word 0	# 0 = frente, 1 = costas, 2 = direita, 3 = esquerda
 
-player_vida: .word 0
+#vida do jogador
+old_player_vida:
+	.word 0
+player_vida: 
+	.word 3
+placar_vida:
+.word sprite_um_dados, 25, 25
+.word sprite_dois_dados, 25, 25
+.word sprite_tres_dados, 25, 25
 
 player_state_sprite:	#definir o sprite do player e largura
     .word sprite_frente_dados,   17, 17
@@ -138,7 +146,35 @@ call Print
 lw   ra, 0(sp)
 addi sp, sp, 4
 
-#imprimir a cabeca no HUD
+la t0, player_vida	#carrego o endereco do player_vida
+lw t1, 0(t0)	#achar a posicao da vida
+addi t3, t1, -1
+li t4, 12
+mul t3, t3, t4
+
+la t5, placar_vida #carregar o endereco e os dados do sprite da vida
+add t5, t5, t3
+lw a0, 0(t5)
+lw a3, 4(t5)
+lw a4, 8(t5)
+li a1, 23
+li a2, 50
+
+li a5, 0	#imprimi a vida do player no frame 0
+addi sp, sp, -4
+sw ra, 0(sp)
+call Print
+lw ra, 0(sp)
+addi sp, sp, 4
+
+li a5, 1	#imprimi a vida do player no frame 1
+addi sp, sp, -4
+sw ra, 0(sp)
+call Print
+lw ra, 0(sp)
+addi sp, sp, 4
+
+#imprimir a coracao no HUD
 la a0, sprite_coracao_dados	#Carrego o endereco do coracao
 li a1, 20	#x e y
 li a2, 20
@@ -175,6 +211,7 @@ addi sp, sp, 4
 
 
 continuar2:
+
 #Atualizar posicoes do jogador
 la t0, OLD_CHAR_POS	#Carrego em t0 o OLD_CHAR_POS
 lh a1, 0(t0)		#Coloco em t0 o endereco do offset 0 = x
@@ -342,6 +379,12 @@ j pula_tiro
 
 
 pula_tiro:
+
+addi sp, sp, -4	#chamo a funcao de imprimir a vida do player
+sw ra, 0(sp)
+call desenhar_vida
+lw ra, 0(sp)
+addi sp, sp, 4
 
 addi sp, sp, -4	#chama a funcao de desenhar os inimigos
 sw   ra, 0(sp)
@@ -598,6 +641,8 @@ ecall
 .include "funcoes/print_imagem.asm"
 .include "funcoes/spawnar_inimigos.asm"
 .include "funcoes/desenhar_inimigos.asm"
+.include "funcoes/desenhar_vida.asm"
+.include "funcoes/apagar_vida.asm"
 
 .data
 .include "sprites/HUD/um.asm"
