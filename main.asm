@@ -651,8 +651,10 @@ ecall
 .include "funcoes/desenhar_inimigos.asm"
 .include "funcoes/desenhar_vida.asm"
 .include "funcoes/apagar_vida.asm"
+.include "funcoes/mover_inimigo.asm"
 
 .data
+.include "sprites/game_over.asm"
 .include "sprites/HUD/um.asm"
 .include "sprites/HUD/dois.asm"
 .include "sprites/HUD/tres.asm"
