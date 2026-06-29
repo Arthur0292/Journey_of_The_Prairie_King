@@ -85,5 +85,5 @@ j loop_desenhar
 fim_desenhar:
 lw s1, 0(sp)
 lw s2, 4(sp)
-    addi sp, sp, 8
-    ret
+addi sp, sp, 8
+ret
