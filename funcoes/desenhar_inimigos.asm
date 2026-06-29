@@ -64,7 +64,7 @@ lh a2, 2(t5)               # y
 pular_apagar: 
 la t0, inimigo_sprite	#carrego o endereco dos sprites do inimigo
 li t1, 12
-mul t2, s1, t1		#calcular o offset
+mul t2, s1, t1		#calculo o offset
 add t0, t0, t2
 lw a0, 0(t0)	#guardo em t0 o offset 0
 lw a3, 4(t0)	#guardo a largura e altura
