@@ -79,11 +79,11 @@ lw ra, 0(sp)
 addi sp, sp, 4
 
 proximo_desenhar:
-    addi s1, s1, 1
-    j loop_desenhar
+addi s1, s1, 1
+j loop_desenhar
 
 fim_desenhar:
-    lw s1, 0(sp)
-    lw s2, 4(sp)
+lw s1, 0(sp)
+lw s2, 4(sp)
     addi sp, sp, 8
     ret
