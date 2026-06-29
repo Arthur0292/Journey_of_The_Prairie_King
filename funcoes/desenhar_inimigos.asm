@@ -36,8 +36,7 @@ lh t6, 2(t0)
 bne t1, t5, mudou
 bne t2, t6, mudou
     
-j pular_apagar
-
+j proximo_desenhar
 
 mudou:
 
@@ -61,7 +60,6 @@ add t5, t5, s2
 lh a1, 0(t5)               # x
 lh a2, 2(t5)               # y
 
-pular_apagar: 
 la t0, inimigo_sprite	#carrego o endereco dos sprites do inimigo
 li t1, 12
 mul t2, s1, t1		#calculo o offset
