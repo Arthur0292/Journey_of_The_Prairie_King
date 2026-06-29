@@ -9,13 +9,19 @@
 OLD_CHAR_POS: .half 150, 120	#Definir a posicao do player
 CHAR_POS: .half 150, 120
 
-TIRO_POS: .half 0, 0	#Definir a posicao dos tiros
-TIRO_OLD_POS:	.half 0, 0
+TIRO_POS: 
+.half 0, 0	#Definir a posicao dos tiros
+TIRO_OLD_POS:	
+.half 0, 0
 
-INIMIGO_SPAWN_POS: .half 190,10, 296,110, 86,110, 190,215 #Definir as posicoes do inimigo
-INIMIGO_POS: .half 195,10, 308,124, 86,124, 195,230 #Definir as posicoes do inimigo
-INIMIGO_OLD_POS: .half 0,0, 0,0, 0,0, 0,0	#posicao antiga do inimigo
-INIMIGO_ATIVO: .word 0, 0, 0, 0	#Inimigo ativo ou nao
+INIMIGO_SPAWN_POS: 
+.half 190,10, 296,110, 86,110, 190,215 #Definir as posicoes do inimigo
+INIMIGO_POS: 
+.half 195,10, 308,124, 86,124, 195,230 #Definir as posicoes do inimigo
+INIMIGO_OLD_POS: 
+.half 0,0, 0,0, 0,0, 0,0	#posicao antiga do inimigo
+INIMIGO_ATIVO: 
+.word 0, 0, 0, 0	#Inimigo ativo ou nao
 
 inimigo_sprite:	#defini o sprite do inimigo e largura representando(offset 0 a 4)
 .word sprite_inimigo_frente, 16, 20
