@@ -15,7 +15,7 @@ TIRO_OLD_POS:
 .half 0, 0
 
 INIMIGO_SPAWN_POS: 
-.half 190,10, 296,110, 86,110, 190,215 #Definir as posicoes do inimigo
+.half 190,10, 296,110, 86,110, 190,215 #Definir as posicoes de spawn dos inimigo
 INIMIGO_POS: 
 .half 195,10, 308,124, 86,124, 195,230 #Definir as posicoes do inimigo
 INIMIGO_OLD_POS: 
