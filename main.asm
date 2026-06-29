@@ -15,19 +15,21 @@ TIRO_OLD_POS:
 .half 0, 0
 
 INIMIGO_SPAWN_POS: 
-.half 190,10, 296,110, 86,110, 190,215 #Definir as posicoes de spawn dos inimigo
+.half 190,10, 296,110, 86,110, 190,215 #Definir as posicoes do inimigo
 INIMIGO_POS: 
 .half 195,10, 308,124, 86,124, 195,230 #Definir as posicoes do inimigo
 INIMIGO_OLD_POS: 
 .half 0,0, 0,0, 0,0, 0,0	#posicao antiga do inimigo
 INIMIGO_ATIVO: 
 .word 0, 0, 0, 0	#Inimigo ativo ou nao
+INIMIGO_DIR:
+.word 0, 0, 0, 0
 
 inimigo_sprite:	#defini o sprite do inimigo e largura representando(offset 0 a 4)
 .word sprite_inimigo_frente, 16, 20
+.word sprite_inimigo_costas, 16, 20
 .word sprite_inimigo_direita, 16, 20
 .word sprite_inimigo_esquerda, 16, 20
-.word sprite_inimigo_costas, 16, 20
 
 FRAME_COUNTER: .word 0
 SPAWN_INTERVAL: .word 240   #Intervalo de spawner do inimigo
