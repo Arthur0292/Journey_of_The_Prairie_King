@@ -1,11 +1,12 @@
 spawnar_inimigos:
-li t0, 0	#contador de spawn
-
+addi sp, sp, -4
+sw s1, 0(sp)
+li s1, 0              # s1 = i (contador)
 loop_spawn:
 
 li t1, 4	#adiciono o max de inimigos
-bge t0, t1, fim_spawn
-slli t2, t0, 2	
+bge s1, t1, fim_spawn
+slli t2, s1, 2	
 
 la t3, INIMIGO_ATIVO	#Armazeno o endereco de inimigo ativo
 add t3, t3, t2
@@ -22,21 +23,44 @@ add t5, t5, t2
 sh t6, 0(t5)
 sh t4, 2(t5)
 
-la t5, INIMIGO_OLD_POS
+la t5, INIMIGO_OLD_POS          
 add t5, t5, t2
 sh t6, 0(t5)
 sh t4, 2(t5)
 
-li t6, 1
-sw t6, 0(t3)    # ativa o slot
+la t5, INIMIGO_DIR           
+add t5, t5, t2
+sw zero, 0(t5)
+
+li t5, 1                   
+sw t5, 0(t3) # ativa o slot
+
+mv a1, t6  # x
+mv a2, t4  # y
+la a0, sprite_inimigo_frente   # direcao inicial = frente
+li a3, 16	#largura e altura para o print nos dois frames
+li a4, 20
+
+li a5, 0	#desenha inimigo no frame 0
+addi sp, sp, -4
+sw ra, 0(sp)
+call Print
+lw ra, 0(sp)
+addi sp, sp, 4
+
+li a5, 1	#desenha inimigo no frame 1
+addi sp, sp, -4
+sw ra, 0(sp)
+call Print
+lw ra, 0(sp)
+addi sp, sp, 4
 
 proximo_slot:
-addi t0, t0, 1
+addi s1, s1, 1
 j loop_spawn
 
-
 fim_spawn:
-
+lw s1, 0(sp)
+addi sp, sp, 4
 ret
-
 
