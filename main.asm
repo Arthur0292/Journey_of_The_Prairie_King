@@ -4,7 +4,6 @@
 #						     
 ##############################################################
 
-
 .data
 
 OLD_CHAR_POS: .half 150, 120	#Definir a posicao do player
@@ -34,19 +33,19 @@ PLAYER_STATE: .word 0	# 0 = frente, 1 = costas, 2 = direita, 3 = esquerda
 
 #vida do jogador
 old_player_vida:
-	.word 0
+.word 3
 player_vida: 
-	.word 3
+.word 3
 placar_vida:
 .word sprite_um_dados, 25, 25
 .word sprite_dois_dados, 25, 25
 .word sprite_tres_dados, 25, 25
 
 player_state_sprite:	#definir o sprite do player e largura
-    .word sprite_frente_dados,   17, 17
-    .word sprite_costas_dados,   17, 17
-    .word sprite_direita_dados,  17, 17
-    .word sprite_esquerda_dados, 17, 17 
+.word sprite_frente_dados,   17, 17
+.word sprite_costas_dados,   17, 17
+.word sprite_direita_dados,  17, 17
+.word sprite_esquerda_dados, 17, 17 
 
 .text
 main:
@@ -622,6 +621,7 @@ call Apagar_tiro
 li a5, 1
 call Apagar_tiro
 j pula_tiro	#pula para pula_tiro
+
 
 game_over:
 
