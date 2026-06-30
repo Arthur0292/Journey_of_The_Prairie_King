@@ -387,6 +387,10 @@ j pula_tiro
 
 pula_tiro:
 
+la t0, player_vida	#verifico se a vida é igual a 0
+lw t1, 0(t0)
+beqz t1, game_over	#se for pula pro gamer over
+
 addi sp, sp, -4	#chamo a funcao de imprimir a vida do player
 sw ra, 0(sp)
 call desenhar_vida
@@ -633,8 +637,24 @@ j pula_tiro	#pula para pula_tiro
 
 game_over:
 
-li a7, 10
-ecall
+la a0, GAME_OVER_DATA
+li a1, 0
+
+addi sp, sp, -4	#Salvar o ra para o call a print_imagem
+sw   ra, 0(sp)
+call print_imagem
+lw   ra, 0(sp)
+addi sp, sp, 4
+
+li a1, 1
+
+addi sp, sp, -4	#Salvar o ra para o call a print_imagem
+sw   ra, 0(sp)
+call print_imagem
+lw   ra, 0(sp)
+addi sp, sp, 4
+
+j game_over
     
 fim:
 
