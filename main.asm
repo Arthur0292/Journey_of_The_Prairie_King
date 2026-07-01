@@ -46,9 +46,9 @@ PLAYER_STATE:
 
 #vida do jogador
 old_player_vida:
-.word 0
+.word 3
 player_vida: 
-.word 0
+.word 3
 placar_vida:
 .word sprite_um_dados, 25, 25
 .word sprite_dois_dados, 25, 25
@@ -296,7 +296,7 @@ cima_tiro:
 la t0, TIRO_POS	#carrego o endereco
 lh t1, 2(t0)	#leio o y
 addi t1, t1, -3	#subtraio
-li t4, 10		#Variavel para colisao
+li t4, 15		#Variavel para colisao
 blt t1, t4, desativar_tiro
 sh t1, 2(t0)		#Guarda a nova posicao no offset 2 = y
 
@@ -321,7 +321,7 @@ baixo_tiro:
 la t0, TIRO_POS	#carrego o endereco
 lh t1, 2(t0)	#leio o y
 addi t1, t1, 3	#adiciono
-li t4, 230		#Variavel para colisao
+li t4, 215		#Variavel para colisao
 bgt t1, t4, desativar_tiro
 sh t1, 2(t0)		#Guarda a nova posicao no offset 2 = y
 
@@ -369,7 +369,7 @@ esquerda_tiro:
 la t0, TIRO_POS	#carrego o endereco
 lh t1, 0(t0)	#leio o x
 addi t1, t1, -3	#adiciono
-li t4, 85		#Variavel para colisao
+li t4, 90		#Variavel para colisao
 blt t1, t4, desativar_tiro
 sh t1, 0(t0)		#Guarda a nova posicao no offset 2 = y
 
