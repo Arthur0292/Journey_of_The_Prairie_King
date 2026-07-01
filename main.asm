@@ -31,6 +31,9 @@ inimigo_sprite:	#label do sprite do inimigo e largura
 .word sprite_inimigo_direita, 16, 20
 .word sprite_inimigo_esquerda, 16, 20
 
+MOVE_COUNTER: .word 0
+MOVE_INTERVAL: .word 20   #inimigo so move a cada 5 frames
+
 FRAME_COUNTER: 	#contador do tempo de spawn dos inimigos
 .word 0
 SPAWN_INTERVAL: 
@@ -401,6 +404,23 @@ call desenhar_vida
 lw ra, 0(sp)
 addi sp, sp, 4
 
+la t0, MOVE_COUNTER
+la t1, MOVE_INTERVAL
+lw t2, 0(t0)
+lw t3, 0(t1)
+addi t2, t2, 1
+sw t2, 0(t0)
+blt t2, t3, pula_mover
+
+sw zero, 0(t0)	#chama o mover inimigos
+addi sp, sp, -4
+sw ra, 0(sp)
+call mover_inimigos
+lw ra, 0(sp)
+addi sp, sp, 4
+
+pula_mover:
+
 addi sp, sp, -4	#chama a funcao de desenhar os inimigos
 sw   ra, 0(sp)
 call desenhar_inimigos
@@ -678,10 +698,10 @@ beq t2, t3, fim		#Se for tecla 2 pula para o fim do jogo
 atualizar_vida:
 la t0, player_vida	#atualizo a vida do player	
 li t1, 3
-lw t1, 0(t0)
+sw t1, 0(t0)	#mudo para 3
 
 la t0, old_player_vida	#atualizo a old vida do player
-lw t1, 0(t0)
+sw t1, 0(t0)	#mudo para 3
 
 j menu	# volto para o menu
 
