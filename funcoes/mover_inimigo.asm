@@ -12,7 +12,7 @@ add t3, t3, t2
 lw t4, 0(t3)	#se ativo = 0 entao
 beqz t4, proximo_mover     # nao move 
     
-la t0, CHAR_POS	#le a posicao atual do jogador e guarda
+la t0, PLAYER_POS	#le a posicao atual do jogador e guarda
 lh t5, 0(t0)	#x
 lh t6, 2(t0)	#y
 
@@ -42,19 +42,25 @@ mais_y:
 addi t2, t2, 3
 
 fim_mover_xy:
-sh t1 0(t0)	#grava os novos x w y do inimigo
+sh t1, 0(t0)	#grava os novos x e y do inimigo
 sh t2, 2(t0)
 
 sub a4, t5, a0
-sub a5 t6, a1
+sub a5, t6, a1
 
-bgt a4, a5, x
+bge a4, zero, x
+sub a4, zero, a4    # se for negativo inverte
+
+
+sub a5, t6, a1      
+bge a5, zero, y
+sub a5, zero, a5    # se for negativo inverte
 
 y:
 
-j proximo_mover
 x:
 
+j proximo_mover
 
 
 
