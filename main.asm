@@ -6,8 +6,8 @@
 
 .data
 
-OLD_CHAR_POS: .half 150, 120	#Definir a posicao do player
-CHAR_POS: .half 150, 120
+OLD_PLAYER_POS: .half 150, 120	#Definir a posicao do player
+PLAYER_POS: .half 150, 120
 
 TIRO_POS: 	#posicoes atuias e antigas do tiro
 .half 0, 0	
@@ -68,12 +68,12 @@ li   t1, 1
 sw   t1, 0(t0)
 
 #Armazeno posicao atual do jogador
-la t0, CHAR_POS #Armazena em t0 o endereco do CHAR_POS
+la t0, PLAYER_POS #Armazena em t0 o endereco do PLAYER_POS
 lh t1, 0(t0)	#Le o (offset 0) e armazena em t1
 lh t2, 2(t0)	#Le o (offset 2) e armazena em t2
 
 #Armazeno os valores de t1 e t2 na posicao antiga
-la t0, OLD_CHAR_POS
+la t0, OLD_PLAYER_POS
 sh t1, 0(t0)	
 sh t2, 2(t0)
 
@@ -224,7 +224,7 @@ addi sp, sp, 4
 continuar2:
 
 #Atualizar posicoes do jogador
-la t0, OLD_CHAR_POS	#Carrego em t0 o OLD_CHAR_POS
+la t0, OLD_PLAYER_POS	#Carrego em t0 o OLD_PLAYER_POS
 lh a1, 0(t0)		#Coloco em t0 o endereco do offset 0 = x
 lh a2, 2(t0)		#Coloco em t0 o endereco do offset 2 = y
 li a3, 17		#Coloque em a3 a alrgura
@@ -237,8 +237,8 @@ call Apagar
 lw   ra, 0(sp)
 addi sp, sp, 4
 
-la t0, OLD_CHAR_POS		#Carrega o endereco de old_char para t0
-la t1, CHAR_POS			#carrega o endereco de char para t1
+la t0, OLD_PLAYER_POS		#Carrega o endereco de old_palyer para t0
+la t1, PLAYER_POS			#carrega o endereco de char para t1
 lh t2, 0(t1)		#Ler o  valor x de t1 
 sh t2, 0(t0)		#Armazena esse valor no old_char
 lh t2, 2(t1)		#Ler o  valor y de t1
@@ -420,7 +420,7 @@ lw a3, 4(t0)		#Aramzena em a3 a largura
 lw a4, 8(t0)		#Aramzena em a4 a altura
 
 #Funcao para printar o player na tela
-la t0, CHAR_POS
+la t0, PLAYER_POS
 lh a1, 0(t0)	#Aramzeno em a1 o x
 lh a2, 2(t0)	#Aramzeno em a2 o y
 mv a5, s3
@@ -474,12 +474,11 @@ beq t2, t3 , mover_baixo	#Se tecla = s pula para mover baixo
 li t3, 'd'
 beq t2, t3 , mover_direita	#Se tecla = d pula para mover direita
 
-ret			#Retorna para a funcao chamadora o game_loop
-
+ret			#Retorna para a funcao game_loop
 
 mover_cima:
 
-la t0, CHAR_POS		#Pegando o endereco da posicao do jogador
+la t0, PLAYER_POS		#Pegando o endereco da posicao do jogador
 lh t1, 2(t0)		#ler da memoria o offset 2 = y
 addi t1, t1, -8		#Subtrai -8  pixels
 li t4, 16		#Variavel para colisao
@@ -494,7 +493,7 @@ ret
 
 mover_esquerda:
 
-la t0, CHAR_POS		#Pegando o endereco da posicao do jogador
+la t0, PLAYER_POS		#Pegando o endereco da posicao do jogador
 lh t1, 0(t0)		#ler da memoria o offset 0 = x
 addi t1, t1, -8		#Mudar o x
 li t4, 80		#variavel para colisao	
@@ -509,7 +508,7 @@ ret
 
 mover_baixo:
 
-la t0, CHAR_POS		#Pegando o endereco da posicao do jogador
+la t0, PLAYER_POS		#Pegando o endereco da posicao do jogador
 lh t1, 2(t0)		#ler da memoria o offset 2 = y
 addi t1, t1, 8		#Soma 8
 li t4, 215		#Guarda 215 em t4 para colisao
@@ -525,7 +524,7 @@ ret	#retorna
 
 mover_direita:
 
-la t0, CHAR_POS		#Pegando o endereco da posicao do jogador
+la t0, PLAYER_POS		#Pegando o endereco da posicao do jogador
 lh t1, 0(t0)		#ler da memoria o offset 0 = x
 addi t1, t1, 8		#Soma 8
 li t4, 286	#Guarda em t4 o valor 286 para colisao
@@ -540,7 +539,7 @@ ret
 
 tiro_cima:
 
-la t0, CHAR_POS	#Pegar a posicao atual do jogador
+la t0, PLAYER_POS	#Pegar a posicao atual do jogador
 lh t1, 0(t0)	#pegar o x
 lh t2, 2(t0)	#pegar o y
 
@@ -560,7 +559,7 @@ j tecla_fim
 
 tiro_baixo:
 
-la t0, CHAR_POS	#Pegar a posicao atual do jogador
+la t0, PLAYER_POS	#Pegar a posicao atual do jogador
 lh t1, 0(t0)	#pegar o x
 lh t2, 2(t0)	#pegar o y
 
@@ -580,7 +579,7 @@ j tecla_fim
 
 tiro_direita:
 
-la t0, CHAR_POS	#Pegar a posicao atual do jogador
+la t0, PLAYER_POS	#Pegar a posicao atual do jogador
 lh t1, 0(t0)	#pegar o x
 lh t2, 2(t0)	#pegar o y
 
@@ -600,7 +599,7 @@ j tecla_fim
 
 tiro_esquerda:
 
-la t0, CHAR_POS	#Pegar a posicao atual do jogador
+la t0, PLAYER_POS	#Pegar a posicao atual do jogador
 lh t1, 0(t0)	#pegar o x
 lh t2, 2(t0)	#pegar o y
 
@@ -637,6 +636,9 @@ call Apagar_tiro
 li a5, 1
 call Apagar_tiro
 j pula_tiro	#pula para pula_tiro
+
+fase2:
+
 
 
 game_over:
