@@ -32,7 +32,7 @@ inimigo_sprite:	#label do sprite do inimigo e largura
 .word sprite_inimigo_esquerda, 16, 20
 
 MOVE_COUNTER: .word 0
-MOVE_INTERVAL: .word 20   #inimigo so move a cada 5 frames
+MOVE_INTERVAL: .word 5  #inimigo so move a cada 5 frames
 
 FRAME_COUNTER: 	#contador do tempo de spawn dos inimigos
 .word 0
@@ -65,7 +65,6 @@ player_state_sprite:	#definir o sprite do player e largura
 
 .text
 main:
- 
 li   t0, 0xFF200604	#Definir o frame inicial do display
 li   t1, 1
 sw   t1, 0(t0)
