@@ -37,9 +37,11 @@ sw t5, 0(t3) # ativa o slot
 
 mv a1, t6  # x
 mv a2, t4  # y
-la a0, sprite_inimigo_frente   # direcao inicial = frente
-li a3, 16	#largura e altura para o print nos dois frames
-li a4, 20
+la t0, inimigo_sprite    # offset 0 = frente, que é DIR=0
+lw a0, 0(t0)	# qual frame
+lw a3, 4(t0)	#largura e altura do inimigo
+lw a4, 8(t0)
+
 
 li a5, 0	#desenha inimigo no frame 0
 addi sp, sp, -4
