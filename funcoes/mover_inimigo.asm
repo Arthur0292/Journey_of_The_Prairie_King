@@ -6,7 +6,9 @@ li s1, 0
 loop_mover:
 li t1, 4	#maximo de inimigos por spawn
 bge s1, t1, fim_mover
+
 slli t2, s1, 2
+
 la t3, INIMIGO_ATIVO	#verifica se o inimigo ainda esta ativo
 add t3, t3, t2
 lw t4, 0(t3)	#se ativo = 0 entao
@@ -15,6 +17,7 @@ beqz t4, proximo_mover     # nao move
 la t0, PLAYER_POS	#le a posicao atual do jogador e guarda
 lh t5, 0(t0)	#x
 lh t6, 2(t0)	#y
+
 la t0, INIMIGO_POS	#carrega posicao do inimigo
 add t0, t0, t2
 lh t1, 0(t0)	#leio e guardo esses posicoes antigas
@@ -22,64 +25,61 @@ lh t2, 2(t0)
 mv a0, t1
 mv a1, t2
 
-mover_x:
-beq t1, t5, mover_y	#se os dois forem iguais
-blt t1, t5, mais_x	#se x(palyer) < x(inimigo)
-addi t1, t1, -3
-j mover_y
+sub a4, t5, a0	#posicao do player - iniimigo
+sub a5, t6, a1	
 
-mais_x:
-addi t1, t1, 3
-
-mover_y:
-beq t2, t6, fim_mover_xy	#se os dois forem iguais
-blt t2, t6, mais_y
-addi t2, t2, -3
-j fim_mover_xy
-
-mais_y:
-addi t2, t2, 3
-
-fim_mover_xy:
-sh t1, 0(t0)	#grava os novos x e y do inimigo
-sh t2, 2(t0)
-sub a4, t5, a0
-sub a5, t6, a1
-bge a4, zero, calcula_y	#se a4 for maior que zero pulapara dx
+bge a4, zero, x_ok	#se for maior que > 0 entao x ok
 sub a4, zero, a4    # se for negativo inverte
 
-calcula_y:
-sub a5, t6, a1      
-bge a5, zero, calcula_maior	#se a5 for maior que 0 pula para calula_maior
+x_ok:
+bge a5, zero, calcula_maior	#se for maior que > 0 entao y ok
 sub a5, zero, a5    # se for negativo inverte
 
 calcula_maior:
-bge a5, a4, y #se y > x
-j x	#senao pula para x
+blt a5, a4, move_x	#se x < y entao eu movo x senao movo y
+j move_y
 
-y:
-blt a1, t6, dir_frente # se y do player era maior que do inimigo = frente
+move_x:
+blt t1, t5, inc_x	#se t2 for menor que t6 entao incrementa
+addi t1, t1, -1		#diminui o x
+
+j salvar_x
+inc_x:
+addi t1, t1, 1	#aumento o x
+j salvar_x
+
+move_y:
+blt t2, t6, inc_y	#se t2 for menor que t6 entao incrementa
+addi t2, t2, -1		#diminui o y
+j salvar_y
+
+inc_y:
+addi t2, t2, 1	#aumento o y
+	
+salvar_y:
+sh t2, 2(t0)	#salvo o y
+blt a1, t6, dir_frente	#se posicao inimigo for menor que do player
 li t4, 1	#costas = 1
-j dir	#pula para salvar direcao 
+j salvar_dir
 
 dir_frente:
 li t4, 0	#frente = 0
-j dir #pula para salvar direcao
+j salvar_dir
 
-x:
-blt a0, t5, dir_esquerda # se y do player era maior que do inimigo = direita
-li t4, 3	#direita = 3
-j dir	#pula para salvar direcao 
+salvar_x:
+sh t1, 0(t0)	#salvo o x
+blt a0, t5, dir_direita	
+li t4, 3	#esquerda
+j salvar_dir
 
-dir_esquerda:
-li t4, 2	#direita = 3
-j dir #pula para salvar direcao
+dir_direita:
+li t4, 2	#direita
 
-dir:
-slli t3, s1, 2
-la t5, INIMIGO_DIR 	#carrego o endereco do inimigo
-add t5, t5, t3
-sw t4, 0(t5)	#salvo a direcao
+salvar_dir:
+slli t3, s1, 2	#vejo qual inimigo é
+la t5, INIMIGO_DIR	#carrego a direcao
+add t5, t5, t3	#somo com o inimigo
+sw t4, 0(t5)
 
 proximo_mover:
 addi s1, s1, 1
