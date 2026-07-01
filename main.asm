@@ -9,41 +9,46 @@
 OLD_CHAR_POS: .half 150, 120	#Definir a posicao do player
 CHAR_POS: .half 150, 120
 
-TIRO_POS: 
-.half 0, 0	#Definir a posicao dos tiros
+TIRO_POS: 	#posicoes atuias e antigas do tiro
+.half 0, 0	
 TIRO_OLD_POS:	
 .half 0, 0
 
-INIMIGO_SPAWN_POS: 
-.half 190,10, 296,110, 86,110, 190,215 #Definir as posicoes do inimigo
-INIMIGO_POS: 
-.half 195,10, 308,124, 86,124, 195,230 #Definir as posicoes do inimigo
+INIMIGO_SPAWN_POS: #posicao de sapwn do inimigo
+.half 190,10, 296,110, 86,110, 190,215 
+INIMIGO_POS: #posicao do inimigo
+.half 195,10, 308,124, 86,124, 195,230 
 INIMIGO_OLD_POS: 
-.half 0,0, 0,0, 0,0, 0,0	#posicao antiga do inimigo
+.half 0,0, 0,0, 0,0, 0,0
 INIMIGO_ATIVO: 
 .word 0, 0, 0, 0	#Inimigo ativo ou nao
 INIMIGO_DIR:
 .word 0, 0, 0, 0
 
-inimigo_sprite:	#defini o sprite do inimigo e largura representando(offset 0 a 4)
+inimigo_sprite:	#label do sprite do inimigo e largura
 .word sprite_inimigo_frente, 16, 20
 .word sprite_inimigo_costas, 16, 20
 .word sprite_inimigo_direita, 16, 20
 .word sprite_inimigo_esquerda, 16, 20
 
-FRAME_COUNTER: .word 0
-SPAWN_INTERVAL: .word 240   #Intervalo de spawner do inimigo
+FRAME_COUNTER: 	#contador do tempo de spawn dos inimigos
+.word 0
+SPAWN_INTERVAL: 
+.word 240   #Intervalo de spawner do inimigo
 
-TIRO_DIR: .word 0
-TIRO_ATIVO: .word 0
+TIRO_DIR: 
+.word 0
+TIRO_ATIVO: 
+.word 0
 
-PLAYER_STATE: .word 0	# 0 = frente, 1 = costas, 2 = direita, 3 = esquerda
+PLAYER_STATE: 
+.word 0	# 0 = frente, 1 = costas, 2 = direita, 3 = esquerda
 
 #vida do jogador
 old_player_vida:
-.word 3
+.word 0
 player_vida: 
-.word 3
+.word 0
 placar_vida:
 .word sprite_um_dados, 25, 25
 .word sprite_dois_dados, 25, 25
@@ -62,26 +67,26 @@ li   t0, 0xFF200604	#Definir o frame inicial do display
 li   t1, 1
 sw   t1, 0(t0)
 
-#.half = 2 bytes
-#Armazenar posicao atual do jogador
+#Armazeno posicao atual do jogador
 la t0, CHAR_POS #Armazena em t0 o endereco do CHAR_POS
 lh t1, 0(t0)	#Le o (offset 0) e armazena em t1
 lh t2, 2(t0)	#Le o (offset 2) e armazena em t2
 
-#Armazenar os valores na posicao antiga
+#Armazeno os valores de t1 e t2 na posicao antiga
 la t0, OLD_CHAR_POS
 sh t1, 0(t0)	
 sh t2, 2(t0)
 
-# Inicializar posicao do tiro com posiÃ§Ã£o do player
-la t0, TIRO_POS
-sh t1, 0(t0)
-sh t2, 2(t0)
-la t0, TIRO_OLD_POS
-sh t1, 0(t0)
-sh t2, 2(t0)
 
-li s0, 0
+la t0, TIRO_POS	#posicao do tiro
+sh t1, 0(t0)	#x
+sh t2, 2(t0)	#y
+
+la t0, TIRO_OLD_POS	#atualizo a posicao antiga
+sh t1, 0(t0)	#x
+sh t2, 2(t0)	#y
+
+li s0, 0	#defino o frame inicial para o menu
 
 la a0, MENU_DATA	#Carrega o endereco do menu
 li a1, 0		#carrega em a1 o frame do menu = 0
@@ -91,7 +96,6 @@ sw   ra, 0(sp)
 call print_imagem
 lw   ra, 0(sp)
 addi sp, sp, 4
-
 
 la a0, MENU_DATA	#Carrega o endereco do menu = 1
 li a1, 1		#carrega em a1 o frame do menu
@@ -111,7 +115,7 @@ andi t1, t1, 1	#Se for 0 entao and 0 + 0 = 0 mas se for 1 entao and 1 + 1 = 1
 
 beq t1, zero, menu		#Se t0 = 0 entao nao apertou nenhuma tecla e pula
 
-lw t2, 4(t0)	#Como t0 aramzena 4 bytes eu pulo e armazeno o endereÃƒÂ§o da tecla em t2
+lw t2, 4(t0)	#Como t0 aramzena 4 bytes eu pulo e armazeno o endereco da tecla em t2
 
 li t3, '1'
 beq t2, t3 , continua	#Se tecla = 1 continua
@@ -154,9 +158,9 @@ lw   ra, 0(sp)
 addi sp, sp, 4
 
 la t0, player_vida	#carrego o endereco do player_vida
-lw t1, 0(t0)	#achar a posicao da vida
+lw t1, 0(t0)		#achar a posicao da vida
 addi t3, t1, -1
-li t4, 12
+li t4, 12	
 mul t3, t3, t4
 
 la t5, placar_vida #carregar o endereco e os dados do sprite da vida
@@ -197,7 +201,7 @@ addi sp, sp, 4
 
 game_loop:
 
-xori s3, s0, 1	#Alterna o frame 
+xori s3, s0, 1	#Alterna o frame se for 0 vira 1 e se for 1 vira 0
 
 la t0, FRAME_COUNTER	#verifica contador de frames
 la t1, SPAWN_INTERVAL
@@ -235,9 +239,9 @@ addi sp, sp, 4
 
 la t0, OLD_CHAR_POS		#Carrega o endereco de old_char para t0
 la t1, CHAR_POS			#carrega o endereco de char para t1
-lh t2, 0(t1)		#Ler o o valor x de t1 
+lh t2, 0(t1)		#Ler o  valor x de t1 
 sh t2, 0(t0)		#Armazena esse valor no old_char
-lh t2, 2(t1)		#Ler o o valor y de t1
+lh t2, 2(t1)		#Ler o  valor y de t1
 sh t2, 2(t0)		#Armazena esse valor no old_char
 
 
@@ -493,8 +497,8 @@ mover_esquerda:
 la t0, CHAR_POS		#Pegando o endereco da posicao do jogador
 lh t1, 0(t0)		#ler da memoria o offset 0 = x
 addi t1, t1, -8		#Mudar o x
-li t4, 80		#variavel para colisao
-blt t1, t4, tecla_fim	#Se x<80 entao nao muda de posiÃƒÂ§ÃƒÂ£o
+li t4, 80		#variavel para colisao	
+blt t1, t4, tecla_fim	#Se x<80 entao nao muda de posicao
 sh t1, 0(t0)		#Guarda a nova posicao no offset 0 = x
 
 la t0, PLAYER_STATE	
@@ -637,8 +641,8 @@ j pula_tiro	#pula para pula_tiro
 
 game_over:
 
-la a0, GAME_OVER_DATA
-li a1, 0
+la a0, GAME_OVER_DATA #carrega o game_over
+li a1, 0	#frame 0
 
 addi sp, sp, -4	#Salvar o ra para o call a print_imagem
 sw   ra, 0(sp)
@@ -646,7 +650,7 @@ call print_imagem
 lw   ra, 0(sp)
 addi sp, sp, 4
 
-li a1, 1
+li a1, 1	#frame 1
 
 addi sp, sp, -4	#Salvar o ra para o call a print_imagem
 sw   ra, 0(sp)
@@ -654,8 +658,31 @@ call print_imagem
 lw   ra, 0(sp)
 addi sp, sp, 4
 
-j game_over
-    
+li t0, 0xFF200000	#Carregar em t0 o endereco do teclado
+lw t1, 0(t0)	#Armazenar em t1 o endereco do teclado
+
+andi t1, t1, 1	#Se for 0 entao and 0 + 0 = 0 mas se for 1 entao and 1 + 1 = 1
+
+beq t1, zero, game_over		#Se t0 = 0 entao nao apertou nenhuma tecla e pula
+
+lw t2, 4(t0)	#Como t0 aramzena 4 bytes eu pulo e armazeno o endereco da tecla em t2
+
+li t3, '1'
+beq t2, t3 , atualizar_vida	#Se tecla = 1 muda a vida para 3
+
+li t3, '2'
+beq t2, t3, fim		#Se for tecla 2 pula para o fim do jogo
+
+atualizar_vida:
+la t0, player_vida	#atualizo a vida do player	
+li t1, 3
+lw t1, 0(t0)
+
+la t0, old_player_vida	#atualizo a old vida do player
+lw t1, 0(t0)
+
+j menu	# volto para o menu
+
 fim:
 
 li a7, 10	#Encerra o jogo
