@@ -45,6 +45,18 @@ fim_mover_xy:
 sh t1 0(t0)	#grava os novos x w y do inimigo
 sh t2, 2(t0)
 
+sub a4, t5, a0
+sub a5 t6, a1
+
+bgt a4, a5, x
+
+y:
+
+j proximo_mover
+x:
+
+
+
 
 
 proximo_mover:
