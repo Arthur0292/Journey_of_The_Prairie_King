@@ -24,6 +24,8 @@ INIMIGO_ATIVO:
 .word 0, 0, 0, 0	#Inimigo ativo ou nao
 INIMIGO_DIR:
 .word 0, 0, 0, 0
+count_kill:	#contador de kills
+.word 0
 
 inimigo_sprite:	#label do sprite do inimigo e largura
 .word sprite_inimigo_frente, 16, 20
@@ -393,7 +395,7 @@ j pula_tiro
 
 pula_tiro:
 
-la t0, player_vida	#verifico se a vida é igual a 0
+la t0, player_vida	#verifico se a vida Ã© igual a 0
 lw t1, 0(t0)
 beqz t1, game_over	#se for pula pro gamer over
 
