@@ -1,3 +1,4 @@
+
 mover_inimigos:
 addi sp, sp, -4
 sw s1, 0(sp)
@@ -68,12 +69,12 @@ j salvar_dir
 
 salvar_x:
 sh t1, 0(t0)	#salvo o x
-blt a0, t5, dir_direita	
-li t4, 3	#esquerda
+blt a0, t5, dir_esquerda	
+li t4, 2	#esquerda
 j salvar_dir
 
-dir_direita:
-li t4, 2	#direita
+dir_esquerda:
+li t4, 3	#direita
 
 salvar_dir:
 slli t3, s1, 2	#vejo qual inimigo é
