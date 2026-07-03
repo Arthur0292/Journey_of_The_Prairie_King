@@ -15,6 +15,8 @@ add t4, t4, t3	#Adiciono com o offset
 lw t5, 0(t4)
 beq t5, zero, proximo_limpar	#se = 0 entao pulo para o proximo inimigo
 
+sw zero, 0(t4)	#desativo o inimigo
+
 la t6, INIMIGO_OLD_POS	#carrego a posicao antiga
 add t6, t6, t3	#sommo com o offset
 lh a1, 0(t6)               # x antigo
@@ -37,7 +39,6 @@ call Apagar
 lw ra, 0(sp)
 addi sp, sp, 4
 
-sw zero, 0(t4)	#desativo o inimigo
 
 proximo_limpar:
 addi s1, s1, 1	#adiciono 1 ao contador
