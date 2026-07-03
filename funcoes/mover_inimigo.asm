@@ -1,4 +1,3 @@
-
 mover_inimigos:
 addi sp, sp, -4
 sw s1, 0(sp)
