@@ -6,6 +6,12 @@
 
 .data
 
+nivel:	#fase do jogo
+.word 1
+
+cor_fundo:	#cor de fundo do jogo
+.word 118
+
 OLD_PLAYER_POS: .half 150, 120	#Definir a posicao do player
 PLAYER_POS: .half 150, 120
 
@@ -15,7 +21,7 @@ TIRO_OLD_POS:
 .half 0, 0
 
 INIMIGO_SPAWN_POS: #posicao de sapwn do inimigo
-.half 190,10, 296,110, 86,110, 190,215 
+.half 190,10, 296,110, 86,110, 190,200 
 INIMIGO_POS: #posicao do inimigo
 .half 195,10, 308,124, 86,124, 195,230 
 INIMIGO_OLD_POS: 
@@ -24,8 +30,9 @@ INIMIGO_ATIVO:
 .word 0, 0, 0, 0	#Inimigo ativo ou nao
 INIMIGO_DIR:
 .word 0, 0, 0, 0
-count_kill:	#contador de kills
-.word 0
+
+inimigo_kill:	#contador de kills para trocar de fase
+.word 8
 
 inimigo_sprite:	#label do sprite do inimigo e largura
 .word sprite_inimigo_frente, 16, 20
@@ -395,9 +402,31 @@ j pula_tiro
 
 pula_tiro:
 
-la t0, player_vida	#verifico se a vida Ã© igual a 0
+la t0, player_vida	#verifico se a vida é igual a 0
 lw t1, 0(t0)
 beqz t1, game_over	#se for pula pro gamer over
+
+la t0, nivel
+lw t2, 0(t0)
+li t1, 1
+beq t2, t1, nivel_1
+
+nivel2:
+
+la t0, inimigo_kill	#verifico se o contador de kill >= 8
+li t2, 8
+lw t1, 0(t0)
+bge t1, t2, fase2	#se for verdadeiro pula para fase 2
+j continuar3	#se nao continua
+
+nivel_1:
+
+la t0, inimigo_kill	#verifico se o contador de kill >= 8
+li t2, 8
+lw t1, 0(t0)
+bge t1, t2, fase2	#se for verdadeiro pula para fase 2
+
+continuar3:
 
 addi sp, sp, -4	#chamo a funcao de imprimir a vida do player
 sw ra, 0(sp)
@@ -658,9 +687,125 @@ li a5, 1
 call Apagar_tiro
 j pula_tiro	#pula para pula_tiro
 
+#############################
+#          FASE 2           #
+#############################
+
 fase2:
 
+la t0, cor_fundo	#mudo a cor de fundo
+li t6, 255
+sw t6, 0(t0)	#salvo a cor branca do fundo
 
+la t0, nivel	#mudo o nivel
+li t1, 2
+sw t1, 0(t0)
+
+la t0, FRAME_COUNTER	#zero o frame_counter
+sw zero, 0(t0)
+
+addi sp, sp, -4	#chamo a funcao de apagar os inimigos
+sw ra, 0(sp)
+call tirar_inimigos
+lw ra, 0(sp)
+addi sp, sp, 4
+
+la t0, inimigo_kill	#zero o contador de kills na fase 2
+li t1, 0
+sw t1, 0(t0)
+
+la t0, player_state_sprite	#carrego os sprites do player
+la t1, sprite_frente_dados_2	#troco o sprite da frente
+sw t1, 0(t0)	#salvo o novo sprite
+la t1, sprite_costas_dados_2
+sw t1, 12(t0)	#salvo o novo sprite
+la t1, sprite_direita_dados_2
+sw t1, 24(t0)	#salvo o novo sprite
+la t1, sprite_esquerda_dados_2
+sw t1, 36(t0)	#salvo o novo sprite
+
+la t0, inimigo_sprite	#carrego os sprites do inimigo
+la t1, sprite_inimigo_frente_2	#troco o sprite da frente
+sw t1, 0(t0)	#salvo o novo sprite
+la t1, sprite_inimigo_costas_2
+sw t1, 12(t0)	#salvo o novo sprite
+la t1, sprite_inimigo_direita_2
+sw t1, 24(t0)	#salvo o novo sprite
+la t1, sprite_inimigo_esquerda_2
+sw t1, 36(t0)	#salvo o novo sprite
+
+la a0, CENARIO_2_DATA	#carrego o cenario 2
+li a1, 0	#frame
+addi sp, sp, -4	#salvo o ra e imprimo
+sw ra, 0(sp)
+call print_imagem
+lw ra, 0(sp)
+addi sp, sp, 4
+
+li a1, 1
+addi sp, sp, -4	#salvo o ra e imprimo
+sw ra, 0(sp)
+call print_imagem
+lw ra, 0(sp)
+addi sp, sp, 4
+
+
+la a0, sprite_coracao_dados	#Carrego o endereco do coracao
+li a1, 20
+li a2, 20
+li a3, 30
+li a4, 30
+li a5, 0
+
+addi sp, sp, -4		#salva o ra e imprimi
+sw   ra, 0(sp)
+call Print
+lw   ra, 0(sp)
+addi sp, sp, 4
+
+la t0, player_vida	#carrego o endereco do player_vida
+lw t1, 0(t0)		#achar a posicao da vida
+addi t3, t1, -1
+li t4, 12	
+mul t3, t3, t4
+
+la t5, placar_vida #carregar o endereco e os dados do sprite da vida
+add t5, t5, t3
+lw a0, 0(t5)
+lw a3, 4(t5)
+lw a4, 8(t5)
+li a1, 23
+li a2, 50
+
+li a5, 0	#imprimi a vida do player no frame 0
+addi sp, sp, -4
+sw ra, 0(sp)
+call Print
+lw ra, 0(sp)
+addi sp, sp, 4
+
+li a5, 1	#imprimi a vida do player no frame 1
+addi sp, sp, -4
+sw ra, 0(sp)
+call Print
+lw ra, 0(sp)
+addi sp, sp, 4
+
+#imprimir a coracao no HUD
+la a0, sprite_coracao_dados	#Carrego o endereco do coracao
+li a1, 20	#x e y
+li a2, 20
+li a3, 30	#largura e altura
+li a4, 30
+li a5, 1	#frame
+
+addi sp, sp, -4		#salva o ra e imprimi
+sw   ra, 0(sp)
+call Print
+lw   ra, 0(sp)
+addi sp, sp, 4
+
+j continuar3
 
 game_over:
 
@@ -722,8 +867,18 @@ ecall
 .include "funcoes/desenhar_vida.asm"
 .include "funcoes/apagar_vida.asm"
 .include "funcoes/mover_inimigo.asm"
+.include "funcoes/tirar_inimigos.asm"
 
 .data
+.include "sprites/fase_2/cenario2.asm"
+.include "sprites/fase_2/frente_2.asm"
+.include "sprites/fase_2/costas_2.asm"
+.include "sprites/fase_2/direita_2.asm"
+.include "sprites/fase_2/esquerda_2.asm"
+.include "sprites/fase_2/inimigo_frente_2.asm"
+.include "sprites/fase_2/inimigo_costas_2.asm"
+.include "sprites/fase_2/inimigo_direita_2.asm"
+.include "sprites/fase_2/inimigo_esquerda_2.asm"
 .include "sprites/game_over.asm"
 .include "sprites/HUD/um.asm"
 .include "sprites/HUD/dois.asm"
