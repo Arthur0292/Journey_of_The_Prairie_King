@@ -32,7 +32,7 @@ INIMIGO_DIR:
 .word 0, 0, 0, 0
 
 inimigo_kill:	#contador de kills para trocar de fase
-.word 8
+.word 0
 
 inimigo_sprite:	#label do sprite do inimigo e largura
 .word sprite_inimigo_frente, 16, 20
@@ -149,7 +149,7 @@ addi sp, sp, 4
 la a0, CENARIO_DATA	#Carrega o endereco do cenario
 li a1, 1		#Carrega em a1 o frame
 
-addi sp, sp, -4		#salva o ra e imprimi
+addi sp, sp, -4		#imprimi o cenario
 sw   ra, 0(sp)
 call print_imagem
 lw   ra, 0(sp)
@@ -162,7 +162,7 @@ li a3, 30
 li a4, 30
 li a5, 0
 
-addi sp, sp, -4		#salva o ra e imprimi
+addi sp, sp, -4		#salva o ra e imprimi o cenario
 sw   ra, 0(sp)
 call Print
 lw   ra, 0(sp)
@@ -238,9 +238,9 @@ continuar2:
 la t0, OLD_PLAYER_POS	#Carrego em t0 o OLD_PLAYER_POS
 lh a1, 0(t0)		#Coloco em t0 o endereco do offset 0 = x
 lh a2, 2(t0)		#Coloco em t0 o endereco do offset 2 = y
-li a3, 17		#lrgura
-li a4, 17		#altura
-mv a5, s3		#frame de trabalho
+li a3, 17		#Coloque em a3 a alrgura
+li a4, 17		#Coloco em a4 a altura
+mv a5, s3		#Coloco em a5 o frame de trabalho
 
 addi sp, sp, -4	#Salvar o ra para o call apagar
 sw   ra, 0(sp)
@@ -282,7 +282,7 @@ addi sp, sp, 4
 
 la t1, TIRO_POS	#carrego a posicao nova do tiro
 la t0, TIRO_OLD_POS	#carrego a posicao antiga 
-#Armazeno a posicao nova na antiga
+#Armazen a posicao nova na antiga
 lh t2, 0(t1)	
 sh t2, 0(t0)	
 lh t2, 2(t1)		
@@ -300,7 +300,7 @@ beq t2, t3, baixo_tiro	#se for 1 = baixo
 li t3, 2
 beq t2, t3, direita_tiro	#se for 2 = direita
 
-j esquerda_tiro    #senao esquerda
+j esquerda_tiro
 
 cima_tiro:
 
@@ -465,9 +465,9 @@ mul t4, t3, t2	#Multiplica o status por 12
 #De acordo com status selecione o frame a ser carregado armazenado o offset 0, 4, 8
 la t0, player_state_sprite	#Carrega em t0 o endereco de player_state_sprite
 add t0, t0, t4
-lw a0, 0(t0)		#Armazena em a0 o sprite
-lw a3, 4(t0)		#Armazena em a3 a largura
-lw a4, 8(t0)		#Armazena em a4 a altura
+lw a0, 0(t0)		#Aramzena em a0 o sprite
+lw a3, 4(t0)		#Aramzena em a3 a largura
+lw a4, 8(t0)		#Aramzena em a4 a altura
 
 #Funcao para printar o player na tela
 la t0, PLAYER_POS
@@ -482,7 +482,7 @@ lw   ra, 0(sp)
 addi sp, sp, 4
 
 #Alterna entre os frames 0 e 1 
-li   t0, 0xFF200604		#Endereco base
+li   t0, 0xFF200604		#Endereco nase
 sw   s3, 0(t0)		#Leio o endereco e aramzeno em s3
 mv   s0, s3		#Movo para s0 oque esta em s3 para alterna o frame no xori
 
@@ -523,6 +523,9 @@ beq t2, t3 , mover_baixo	#Se tecla = s pula para mover baixo
 
 li t3, 'd'
 beq t2, t3 , mover_direita	#Se tecla = d pula para mover direita
+
+li t3, 'n'
+beq t2, t3 , fase2	#Se tecla = n pula de fase
 
 ret			#Retorna para a funcao game_loop
 
@@ -633,7 +636,7 @@ la t0, PLAYER_POS	#Pegar a posicao atual do jogador
 lh t1, 0(t0)	#pegar o x
 lh t2, 2(t0)	#pegar o y
 
-la t0, TIRO_POS	#troco de acordo com a posicao do player o x e y
+la t0, TIRO_POS	#trocar de acordo com a posicao do player o x e y
 sh t1, 0(t0)
 sh t2, 2(t0)
 
