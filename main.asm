@@ -525,7 +525,7 @@ li t3, 'd'
 beq t2, t3 , mover_direita	#Se tecla = d pula para mover direita
 
 li t3, 'n'
-beq t2, t3 , fase2	#Se tecla = n pula de fase
+beq t2, t3 , troca_fase	#Se tecla = n pula de fase
 
 ret			#Retorna para a funcao game_loop
 
@@ -690,6 +690,62 @@ li a5, 1
 call Apagar_tiro
 j pula_tiro	#pula para pula_tiro
 
+
+troca_fase:	#verifico em qual fase esta
+la t0, nivel
+lw t2, 0(t0)
+li t1, 1	#se for = 1 troca pra fase 2
+beq t1, t2, fase2
+
+#############################
+#          FASE 1         #
+#############################
+
+fase1:
+
+la t0, cor_fundo	#mudo a cor de fundo
+li t6, 118
+sw t6, 0(t0)	#salvo a cor branca do fundo
+
+la t0, nivel	#mudo o nivel
+li t1, 2
+sw t1, 0(t0)
+
+la t0, FRAME_COUNTER	#zero o frame_counter
+sw zero, 0(t0)
+
+addi sp, sp, -4	#chamo a funcao de apagar os inimigos
+sw ra, 0(sp)
+call tirar_inimigos
+lw ra, 0(sp)
+addi sp, sp, 4
+
+la t0, inimigo_kill	#zero o contador de kills na fase 2
+li t1, 0
+sw t1, 0(t0)
+
+la t0, player_state_sprite	#carrego os sprites do player
+la t1, sprite_frente_dados	#troco o sprite da frente
+sw t1, 0(t0)	#salvo o novo sprite
+la t1, sprite_costas_dados
+sw t1, 12(t0)	
+la t1, sprite_direita_dados
+sw t1, 24(t0)	
+la t1, sprite_esquerda_dados
+sw t1, 36(t0)	
+
+la t0, inimigo_sprite	#carrego os sprites do inimigo
+la t1, sprite_inimigo_frente	#troco o sprite da frente
+sw t1, 0(t0)	#salvo o novo sprite
+la t1, sprite_inimigo_costas
+sw t1, 12(t0)	
+la t1, sprite_inimigo_direita
+sw t1, 24(t0)	
+la t1, sprite_inimigo_esquerda
+sw t1, 36(t0)	
+
+j continua
+
 #############################
 #          FASE 2           #
 #############################
@@ -721,21 +777,21 @@ la t0, player_state_sprite	#carrego os sprites do player
 la t1, sprite_frente_dados_2	#troco o sprite da frente
 sw t1, 0(t0)	#salvo o novo sprite
 la t1, sprite_costas_dados_2
-sw t1, 12(t0)	#salvo o novo sprite
+sw t1, 12(t0)	
 la t1, sprite_direita_dados_2
-sw t1, 24(t0)	#salvo o novo sprite
+sw t1, 24(t0)	
 la t1, sprite_esquerda_dados_2
-sw t1, 36(t0)	#salvo o novo sprite
+sw t1, 36(t0)	
 
 la t0, inimigo_sprite	#carrego os sprites do inimigo
 la t1, sprite_inimigo_frente_2	#troco o sprite da frente
 sw t1, 0(t0)	#salvo o novo sprite
 la t1, sprite_inimigo_costas_2
-sw t1, 12(t0)	#salvo o novo sprite
+sw t1, 12(t0)	
 la t1, sprite_inimigo_direita_2
-sw t1, 24(t0)	#salvo o novo sprite
+sw t1, 24(t0)	
 la t1, sprite_inimigo_esquerda_2
-sw t1, 36(t0)	#salvo o novo sprite
+sw t1, 36(t0)	
 
 la a0, CENARIO_2_DATA	#carrego o cenario 2
 li a1, 0	#frame
