@@ -15,6 +15,9 @@ cor_fundo:	#cor de fundo do jogo
 OLD_PLAYER_POS: .half 150, 120	#Definir a posicao do player
 PLAYER_POS: .half 150, 120
 
+MAPA_COLISAO_ATUAL: #mapa de colisao atual
+.word mapa_colisao1_dados
+
 TIRO_POS: 	#posicoes atuias e antigas do tiro
 .half 0, 0	
 TIRO_OLD_POS:	
@@ -534,8 +537,23 @@ mover_cima:
 la t0, PLAYER_POS		#Pegando o endereco da posicao do jogador
 lh t1, 2(t0)		#ler da memoria o offset 2 = y
 addi t1, t1, -8		#Subtrai -8  pixels
-li t4, 16		#Variavel para colisao
-blt t1, t4, tecla_fim	#Se y < 16 entao nao muda a posicao 
+
+#cehcar as colisoes
+li a3, 17	#largura e altura
+li a4, 17
+mv a2, t1	#movo o y 
+lh a1, 0(t0)	#leio x
+addi sp, sp, -4	#salvo o ra e checo as colisoes
+sw ra, 0(sp)
+call colisao
+lw ra, 0(sp)
+addi sp, sp, 4
+li t6, 1
+beq a0, t6, tecla_fim
+
+la t0, PLAYER_POS       # recarrega o endereco
+lh t1, 2(t0)             # rele o y original
+addi t1, t1, -8
 sh t1, 2(t0)		#Guarda a nova posicao no offset 2 = y
 
 la t0, PLAYER_STATE	#Pegando o endereco do status do player
@@ -549,8 +567,23 @@ mover_esquerda:
 la t0, PLAYER_POS		#Pegando o endereco da posicao do jogador
 lh t1, 0(t0)		#ler da memoria o offset 0 = x
 addi t1, t1, -8		#Mudar o x
-li t4, 80		#variavel para colisao	
-blt t1, t4, tecla_fim	#Se x<80 entao nao muda de posicao
+
+#cehco as colisoes
+li a3, 17	#largura e altura
+li a4, 17
+mv a1, t1	#x
+lh a2, 2(t0)	#y
+addi sp, sp, -4	#salvo o ra e checo as colisoes
+sw ra, 0(sp)
+call colisao
+lw ra, 0(sp)
+addi sp, sp, 4
+li t6, 1
+beq a0, t6, tecla_fim
+
+la t0, PLAYER_POS       # recarrega o endereco
+lh t1, 0(t0)             # rele o y original
+addi t1, t1, -8
 sh t1, 0(t0)		#Guarda a nova posicao no offset 0 = x
 
 la t0, PLAYER_STATE	
@@ -564,9 +597,24 @@ mover_baixo:
 la t0, PLAYER_POS		#Pegando o endereco da posicao do jogador
 lh t1, 2(t0)		#ler da memoria o offset 2 = y
 addi t1, t1, 8		#Soma 8
-li t4, 215		#Guarda 215 em t4 para colisao
-bgt t1, t4, tecla_fim	#Se t1>215 entao nao muda de posicao
-sh t1, 2(t0)		#Guarda a nova posicao no offset 0 = x
+
+#checo as colisoes
+li a3, 17	#largura e altura
+li a4, 17
+mv a2, t1	#movo o y 
+lh a1, 0(t0)	#leio x
+addi sp, sp, -4	#salvo o ra e checo as colisoes
+sw ra, 0(sp)
+call colisao
+lw ra, 0(sp)
+addi sp, sp, 4
+li t6, 1
+beq a0, t6, tecla_fim
+
+la t0, PLAYER_POS       # recarrega o endereco
+lh t1, 2(t0)             # rele o y original
+addi t1, t1, 8
+sh t1, 2(t0)		#Guarda a nova posicao no offset 2 = y
 
 la t0, PLAYER_STATE	
 li t1, 0
@@ -580,8 +628,23 @@ mover_direita:
 la t0, PLAYER_POS		#Pegando o endereco da posicao do jogador
 lh t1, 0(t0)		#ler da memoria o offset 0 = x
 addi t1, t1, 8		#Soma 8
-li t4, 286	#Guarda em t4 o valor 286 para colisao
-bgt t1, t4, tecla_fim	#Se t1 > 286 entao nao muda de posicao
+
+#checo as colisoes
+li a3, 17	#largura e altura
+li a4, 17
+mv a1, t1	#x
+lh a2, 2(t0)	#y
+addi sp, sp, -4	#salvo o ra e checo as colisoes
+sw ra, 0(sp)
+call colisao
+lw ra, 0(sp)
+addi sp, sp, 4
+li t6, 1
+beq a0, t6, tecla_fim
+
+la t0, PLAYER_POS       # recarrega o endereco
+lh t1, 0(t0)             # rele o y original
+addi t1, t1, 8
 sh t1, 0(t0)		#Guarda a nova posicao no offset 0 = x
 
 la t0, PLAYER_STATE	
@@ -703,6 +766,10 @@ beq t1, t2, fase2
 
 fase1:
 
+la t0, MAPA_COLISAO_ATUAL	#carrego mapa atual e mudo
+la t1, mapa_colisao1_dados
+sw t1, 0(t0)
+
 la t0, cor_fundo	#mudo a cor de fundo
 li t6, 118
 sw t6, 0(t0)	#salvo a cor branca do fundo
@@ -751,6 +818,10 @@ j continua
 #############################
 
 fase2:
+
+la t0, MAPA_COLISAO_ATUAL	#carrego mapa atual e mudo
+la t1, mapa_colisao2_dados	
+sw t1, 0(t0)
 
 la t0, cor_fundo	#mudo a cor de fundo
 li t6, 255
@@ -927,8 +998,11 @@ ecall
 .include "funcoes/apagar_vida.asm"
 .include "funcoes/mover_inimigo.asm"
 .include "funcoes/tirar_inimigos.asm"
+.include "funcoes/colisao.asm"
 
 .data
+.include "sprites/mapa_colisao1.asm"
+.include "sprites/mapa_colisao2.asm"
 .include "sprites/fase_2/cenario2.asm"
 .include "sprites/fase_2/frente_2.asm"
 .include "sprites/fase_2/costas_2.asm"
