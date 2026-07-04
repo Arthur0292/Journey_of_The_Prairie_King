@@ -708,7 +708,7 @@ li t6, 118
 sw t6, 0(t0)	#salvo a cor branca do fundo
 
 la t0, nivel	#mudo o nivel
-li t1, 2
+li t1, 1
 sw t1, 0(t0)
 
 la t0, FRAME_COUNTER	#zero o frame_counter
