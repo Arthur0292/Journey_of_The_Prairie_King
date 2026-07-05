@@ -1,10 +1,10 @@
 ##############################################################
 #           Journey of The Prairie King - 2026		     #
-#		Trabalho de ISC				     #
+#		Trabalho de ISC			             #
 #							     #
-#	Arthur Vitor Da Silva Nepomuceno - 261027267	     #
-#	JoÃ£o Pedro Oliveira Ventura dos Santos - 261032445  #
-#	SimÃ£o de Almeida Silva - 261042325		     #
+#	Arthur Vitor Da Silva Nepomuceno - 261027267         #
+#	João Pedro Oliveira Ventura dos Santos - 261032445   #
+#	Simão de Almeida Silva - 261042325		     #
 #							     #			     
 ##############################################################
 
@@ -106,6 +106,10 @@ sh t2, 2(t0)	#y
 
 li s0, 0	#defino o frame inicial para o menu
 
+######################
+#	Menu         #
+######################
+
 la a0, MENU_DATA	#Carrega o endereco do menu
 li a1, 0		#carrega em a1 o frame do menu = 0
 
@@ -143,6 +147,11 @@ beq t2, t3, fim		#Se for tecla 2 pula para o fim do jogo
 
 continua:
 
+#########################
+#	Cenario		#
+#########################
+
+
 la a0, CENARIO_DATA	#Carrega o endereco do cenario
 li a1, 0		#Carrega em a1 o frame
 
@@ -161,6 +170,10 @@ sw   ra, 0(sp)
 call print_imagem
 lw   ra, 0(sp)
 addi sp, sp, 4
+
+###########################
+#	    HUD		  #
+###########################
 
 la a0, sprite_coracao_dados	#Carrego o endereco do coracao
 li a1, 20
@@ -309,6 +322,12 @@ beq t2, t3, direita_tiro	#se for 2 = direita
 
 j esquerda_tiro
 
+
+######################################
+#	Movimentacao dos tiros       #
+######################################
+
+
 cima_tiro:
 
 la t0, TIRO_POS	#carrego o endereco
@@ -346,7 +365,6 @@ lw   ra, 0(sp)
 addi sp, sp, 4
 
 j pula_tiro
-
 
 baixo_tiro:
 
@@ -471,7 +489,7 @@ j pula_tiro
 
 pula_tiro:
 
-la t0, player_vida	#verifico se a vida Ã© igual a 0
+la t0, player_vida	#verifico se a vida é igual a 0
 lw t1, 0(t0)
 beqz t1, game_over	#se for pula pro gamer over
 
@@ -503,6 +521,7 @@ call desenhar_vida
 lw ra, 0(sp)
 addi sp, sp, 4
 
+#contador de movimento
 la t0, MOVE_COUNTER
 la t1, MOVE_INTERVAL
 lw t2, 0(t0)
@@ -597,6 +616,10 @@ li t3, 'n'
 beq t2, t3 , troca_fase	#Se tecla = n pula de fase
 
 ret			#Retorna para a funcao game_loop
+
+####################################
+#	Movimentacao do player     #
+####################################
 
 mover_cima:
 
@@ -719,6 +742,9 @@ sw t1, 0(t0)
 
 ret
 
+#########################################
+#	Direcao e posicao do tiro	#
+#########################################
 tiro_cima:
 
 la t0, PLAYER_POS	#Pegar a posicao atual do jogador
@@ -1026,6 +1052,7 @@ lw   ra, 0(sp)
 addi sp, sp, 4
 
 j continuar3
+
 
 game_over:
 
