@@ -3,8 +3,8 @@
 #		Trabalho de ISC			             #
 #							     #
 #	Arthur Vitor Da Silva Nepomuceno - 261027267         #
-#	JoÃ£o Pedro Oliveira Ventura dos Santos - 261032445  #
-#	SimÃ£o de Almeida Silva - 261042325		     #
+#	João Pedro Oliveira Ventura dos Santos - 261032445   #
+#	Simão de Almeida Silva - 261042325		     #
 #							     #			     
 ##############################################################
 
@@ -489,7 +489,7 @@ j pula_tiro
 
 pula_tiro:
 
-la t0, player_vida	#verifico se a vida Ã© igual a 0
+la t0, player_vida	#verifico se a vida é igual a 0
 lw t1, 0(t0)
 beqz t1, game_over	#se for pula pro gamer over
 
@@ -743,7 +743,7 @@ sw t1, 0(t0)
 ret
 
 #########################################
-#	Direcao e posicao do tiro	#
+#	Direcao e posicao do tiro 	#
 #########################################
 tiro_cima:
 
@@ -762,6 +762,14 @@ sw t1, 0(t0)
 la t0, TIRO_ATIVO	#defino se o tiro esta ativo
 li t1, 1
 sw t1, 0(t0)
+
+#efeito sonoro do tiro
+li a0, 60      # pitch
+li a1, 100     # duracao em ms
+li a2, 127     # instrumento = gunshot
+li a3, 127     # volume
+li a7, 31      # MidiOut
+ecall
 
 j tecla_fim
 
@@ -783,6 +791,14 @@ la t0, TIRO_ATIVO	#defino se o tiro esta ativo
 li t1, 1
 sw t1, 0(t0)
 
+#efeito sonoro do tiro
+li a0, 60      # pitch
+li a1, 100     # duracao em ms
+li a2, 127     # instrumento = gunshot
+li a3, 127     # volume
+li a7, 31      # MidiOut
+ecall
+
 j tecla_fim
 
 tiro_direita:
@@ -803,6 +819,14 @@ la t0, TIRO_ATIVO	#defino se o tiro esta ativo
 li t1, 1
 sw t1, 0(t0)
 
+#efeito sonoro do tiro
+li a0, 60      # pitch
+li a1, 100     # duracao em ms
+li a2, 127     # instrumento = gunshot
+li a3, 127     # volume
+li a7, 31      # MidiOut
+ecall
+
 j tecla_fim
 
 tiro_esquerda:
@@ -822,6 +846,14 @@ sw t1, 0(t0)
 la t0, TIRO_ATIVO	#defino se o tiro esta ativo
 li t1, 1
 sw t1, 0(t0)
+
+#efeito sonoro do tiro
+li a0, 60      # pitch
+li a1, 100     # duracao em ms
+li a2, 127    # instrumento = gunshot
+li a3, 120     # volume
+li a7, 31      # MidiOut
+ecall
 
 j tecla_fim
 
