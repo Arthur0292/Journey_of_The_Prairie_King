@@ -1,6 +1,10 @@
 ##############################################################
 #           Journey of The Prairie King - 2026
-#		Trabalho de ISC	
+#		Trabalho de ISC
+#
+#	Arthur Vitor Da Silva Nepomuceno - 261027267
+#	João Pedro Oliveira Ventura dos Santos - 261032445
+#	Simão de Almeida Silva - 261042325
 #						     
 ##############################################################
 
@@ -309,13 +313,27 @@ cima_tiro:
 
 la t0, TIRO_POS	#carrego o endereco
 lh t1, 2(t0)	#leio o y
-addi t1, t1, -3	#subtraio
-li t4, 15		#Variavel para colisao
-blt t1, t4, desativar_tiro
+addi t1, t1, -3
+
+#cehcar as colisoes
+li a3, 5#largura e altura
+li a4, 5
+mv a2, t1	#movo o y 
+lh a1, 0(t0)	#leio x
+
+addi sp, sp, -4	#salvo o ra e checo as colisoes
+sw ra, 0(sp)
+call colisao
+lw ra, 0(sp)
+addi sp, sp, 4
+li t6, 1
+beq a0, t6, desativar_tiro
+la t0, TIRO_POS       # recarrega o endereco
+lh t1, 2(t0)             # rele o y original
+addi t1, t1, -3
 sh t1, 2(t0)		#Guarda a nova posicao no offset 2 = y
 
 la a0, sprite_tiro_dados
-
 la t0, TIRO_POS	#carrega o posicao atual do tiro
 lh a1, 0(t0)    # x
 lh a2, 2(t0)    # y
@@ -335,8 +353,24 @@ baixo_tiro:
 la t0, TIRO_POS	#carrego o endereco
 lh t1, 2(t0)	#leio o y
 addi t1, t1, 3	#adiciono
-li t4, 215		#Variavel para colisao
-bgt t1, t4, desativar_tiro
+
+#cehcar as colisoes
+li a3, 5#largura e altura
+li a4, 5
+mv a2, t1	#movo o y 
+lh a1, 0(t0)	#leio x
+
+addi sp, sp, -4	#salvo o ra e checo as colisoes
+sw ra, 0(sp)
+call colisao
+lw ra, 0(sp)
+addi sp, sp, 4
+li t6, 1
+
+beq a0, t6, desativar_tiro
+la t0, TIRO_POS       # recarrega o endereco
+lh t1, 2(t0)             # rele o y original
+addi t1, t1, 3
 sh t1, 2(t0)		#Guarda a nova posicao no offset 2 = y
 
 la a0, sprite_tiro_dados
@@ -359,9 +393,25 @@ direita_tiro:
 la t0, TIRO_POS	#carrego o endereco
 lh t1, 0(t0)	#leio o x
 addi t1, t1, 3	#adiciono
-li t4, 300		#Variavel para colisao
-bgt t1, t4, desativar_tiro
-sh t1, 0(t0)		#Guarda a nova posicao no offset 2 = y
+
+#cehcar as colisoes
+li a3, 5#largura e altura
+li a4, 5
+lh a2, 2(t0)	# y 
+mv a1, t1	#movo o x
+
+addi sp, sp, -4	#salvo o ra e checo as colisoes
+sw ra, 0(sp)
+call colisao
+lw ra, 0(sp)
+addi sp, sp, 4
+li t6, 1
+
+beq a0, t6, desativar_tiro
+la t0, TIRO_POS       # recarrega o endereco
+lh t1, 0(t0)             # rele o y original
+addi t1, t1, 3
+sh t1, 0(t0)		#Guarda a nova posicao no offset 0 = x
 
 la a0, sprite_tiro_dados
 
@@ -383,9 +433,25 @@ esquerda_tiro:
 la t0, TIRO_POS	#carrego o endereco
 lh t1, 0(t0)	#leio o x
 addi t1, t1, -3	#adiciono
-li t4, 90		#Variavel para colisao
-blt t1, t4, desativar_tiro
-sh t1, 0(t0)		#Guarda a nova posicao no offset 2 = y
+
+#cehcar as colisoes
+li a3, 5#largura e altura
+li a4, 5
+lh t2, 2(t0)	# y 
+mv a1, t1	#movo o x
+
+addi sp, sp, -4	#salvo o ra e checo as colisoes
+sw ra, 0(sp)
+call colisao
+lw ra, 0(sp)
+addi sp, sp, 4
+li t6, 1
+
+beq a0, t6, desativar_tiro
+la t0, TIRO_POS       # recarrega o endereco
+lh t1, 0(t0)             # rele o y original
+addi t1, t1, -3
+sh t1, 0(t0)		#Guarda a nova posicao no offset 0 = x
 
 la a0, sprite_tiro_dados
 
