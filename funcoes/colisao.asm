@@ -1,64 +1,50 @@
-#a1 = x
-#a2 = y
-#a3 = largura
-#a4 = altura
+# a1 = x
+# a2 = y
+# a3 = largura
+# a4 = altura
 
 colisao:
-la t0, MAPA_COLISAO_ATUAL	#carrego o mapa de colisao
-lw t0, 0(t0)	
-mv t6, t0	#movo o endereco para t6
 
-mv t4, a1	#movo o x e y em t4 e t5
-mv t5, a2
+    la t0, MAPA_COLISAO_ATUAL	#carrega o endereco do mapa de colisao atual	
+    lw t6, 0(t0)          
 
-canto1:#(x, y)
-li t1, 320
-mul t1, t1, t5	#320 * y
-add t1, t1, t4	#(320 * y) + x
-add t2, t6, t1
-lbu t3, 0(t2)	#leio o byte no mapa de colisao
-li t0, 1
-beq t3, t0, bloqueado	#se for = 1 bloqueado
+    mv t4, a2             # y atual
+    add t5, a2, a4        # y final
 
-canto2:#(x + largura - 1, y) 
-add t1, t4, a3	# x + largura
-addi t1, t1, -1	# -1
-li t2, 320	# (320 * y) + x
-mul t2, t5, t2	
-add t2, t2, t1
-add t2, t6, t2
-lbu t3, 0(t2)
-li t0, 1	#leio o byte no mapa
-beq t3, t0, bloqueado
+loop_y:
 
-canto3:	#(x, y + altura - 1)
-add t1, t5, a4
-addi t1, t1, -1
-li t2, 320	#(320 * y + x)	
-mul t2, t2, t1
-add t2, t2, t4
-add t2, t6, t2
-lbu t3, 0(t2)	#leio o byte no mapa
-li t0, 1
-beq t3, t0, bloqueado
+    bge t4, t5, livre	
 
-canto4: #(x + largura - 1, y + altura - 1)
-add t1, t4, a3	#x + largura
-addi t1, t1, -1	# - 1
-add t2, t5, a4	# y + altura
-addi t2, t2, -1
-li t3, 320
-mul t3, t3, t2	#320 * y
-add t3, t3, t1	# y + x
-add t3, t6, t3
-lbu t2, 0(t3)	#leio do mapa
-li t0, 1
-beq t0, t2, bloqueado
+    mv t1, a1             # x atual
+    add t2, a1, a3        # x final
 
-li a0, 0	#se todas falharem retorna 0
-ret
+loop_x:
+
+    bge t1, t2, proxima_linha
+
+    # endereço = mapa + y*320 + x
+    li t3, 320
+    mul t0, t4, t3
+    add t0, t0, t1
+    add t0, t0, t6
+
+    lbu t3, 0(t0)
+
+    li t0, 1
+    beq t3, t0, bloqueado	#se t3 for = 1 bloqueado
+
+    addi t1, t1, 4        # próximo x
+    j loop_x
+
+proxima_linha:
+
+    addi t4, t4, 4        # próximo y
+    j loop_y
+
+livre:
+    li a0, 0	#retorna 0
+    ret
 
 bloqueado:
-li a0, 1	#retorna 1
-
-ret
+    li a0, 1	#retorna 1
+    ret
