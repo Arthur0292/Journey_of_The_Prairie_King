@@ -10,6 +10,21 @@
 
 .data
 
+#####################
+#	Musicas	    #
+#####################
+
+###   Musica Menu   ###
+
+#Numero de notas
+NUM:
+.word 207
+NOTAS:
+64,132,65,132,67,1325,65,265,67,265,69,132,71,66,69,66,67,265,65,265,64,132,65,132,67,530,64,132,62,132,60,795,59,132,60,132,62,265,64,132,62,132,60,132,59,132,60,132,62,132,65,132,64,265,60,265,55,132,59,132,57,132,59,132,57,132,55,132,53,132,52,397,55,397,50,397,53,397,52,132,53,132,55,529,53,132,52,265,48,265,43,132,47,132,45,132,47,132,45,132,43,132,41,132,40,397,41,397,65,132,64,265,60,265,55,132,59,132,57,132,59,132,57,132,55,132,53,132,52,397,55,397,50,397,53,397,51,132,50,132,48,794,47,265,50,265,48,1590,65,132,64,265,60,265,55,132,59,132,57,132,59,132,57,132,55,132,53,132,55,397,60,397,62,795,65,132,64,265,60,265,55,132,59,132,57,132,59,132,57,132,55,132,53,132,52,132,53,132,55,132,57,132,55,132,57,132,59,132,57,132,59,132,60,132,62,132,64,132,72,530,72,265,72,265,74,265,76,265,77,530,75,132,74,132,72,530,79,265,77,530,75,132,74,132,72,265,74,265,75,265,75,795,74,795,75,530,75,265,75,265,77,265,79,265,81,530,77,265,72,530,74,265,75,530,74,132,72,132,70,530,68,132,67,132,65,530,63,132,62,132,60,530,65,265,67,3180,65,132,64,265,60,265,55,132,59,132,57,132,59,132,57,132,55,132,53,132,55,397,51,397,53,397,59,397,65,132,64,265,60,265,55,132,59,132,57,132,59,132,57,132,55,132,53,132,60,397,63,397,65,397,71,397,72,132,73,265,67,265,62,132,65,132,64,132,65,132,64,132,62,132,60,132,63,397,60,397,62,397,59,397,56,132,59,132,60,132,62,132,63,132,67,132,65,132,63,132,62,132,65,132,71,132,74,132,72,132,72,265,72,265,72,396,72,265
+
+MUSICA_NOTA_ATUAL:
+.word 0
+
 nivel:	#fase do jogo
 .word 1
 
@@ -65,9 +80,9 @@ PLAYER_STATE:
 
 #vida do jogador
 old_player_vida:
-.word 0
+.word 3
 player_vida: 
-.word 0
+.word 3
 placar_vida:
 .word sprite_um_dados, 25, 25
 .word sprite_dois_dados, 25, 25
@@ -135,7 +150,7 @@ lw t1, 0(t0)	#Armazenar em t1 o endereco do teclado
 
 andi t1, t1, 1	#Se for 0 entao and 0 + 0 = 0 mas se for 1 entao and 1 + 1 = 1
 
-beq t1, zero, menu		#Se t0 = 0 entao nao apertou nenhuma tecla e pula
+beq t1, zero, tocar_nota_menu		#Se t0 = 0 entao nao apertou nenhuma tecla toc a musica
 
 lw t2, 4(t0)	#Como t0 aramzena 4 bytes eu pulo e armazeno o endereco da tecla em t2
 
@@ -144,6 +159,41 @@ beq t2, t3 , continua	#Se tecla = 1 continua
 
 li t3, '2'
 beq t2, t3, fim		#Se for tecla 2 pula para o fim do jogo
+
+##################
+# Musica do menu #
+##################
+tocar_nota_menu:
+la t0, MUSICA_NOTA_ATUAL	#Carrega nota musica atual	
+lw t1, 0(t0)
+
+la t2, NOTAS	#Carrega notas
+li t3, 8	#indice	
+mul t4, t1, t3	
+add t2, t2, t4
+
+lw a0, 0(t2)	#le o valor da nota
+lw a1, 4(t2)	#le a duracao das notas
+li a2, 6	#define o instrumento
+li a3, 120	#define o volume	
+li a7, 31	#define a chamada syscall
+ecall
+
+mv a0, a1	#passa a duracao da noa para a pausa
+li a7, 32	#define a chamada syscall
+ecall
+
+addi t1, t1, 1	#incrementa no musica nota atual
+la t5, NUM	
+lw t5, 0(t5)	#le o numero de notas
+blt t1, t5, salvar_indice_menu	#se contador for menor que o numero de notas salva
+li t1, 0	#senao zera o indice
+
+salvar_indice_menu:
+sw t1, 0(t0)	#salva o indice
+
+j menu	#volta para o menu
+
 
 continua:
 
