@@ -16,8 +16,8 @@ nivel:	#fase do jogo
 cor_fundo:	#cor de fundo do jogo
 .word 118
 
-OLD_PLAYER_POS: .half 150, 120	#Definir a posicao do player
-PLAYER_POS: .half 150, 120
+OLD_PLAYER_POS: .half 180, 105	#Definir a posicao do player
+PLAYER_POS: .half 180, 105
 
 MAPA_COLISAO_ATUAL: #mapa de colisao atual
 .word mapa_colisao1_dados
@@ -832,6 +832,18 @@ beq t1, t2, fase2
 
 fase1:
 
+la t0, OLD_PLAYER_POS	#mudo para a posicao de spawn do old pos
+li t1, 180	#x
+sh t1, 0(t0)
+li t1, 105	#y
+sh t1, 2(t0)
+
+la t0, PLAYER_POS	#mudo para a posicao de spawn do player pos
+li t1, 180	#x
+sh t1, 0(t0)
+li t1, 105	#y
+sh t1, 2(t0)
+
 la t0, MAPA_COLISAO_ATUAL	#carrego mapa atual e mudo
 la t1, mapa_colisao1_dados
 sw t1, 0(t0)
@@ -884,6 +896,18 @@ j continua
 #############################
 
 fase2:
+
+la t0, OLD_PLAYER_POS	#mudo para a posicao de spawn do old pos
+li t1, 180	#x
+sh t1, 0(t0)
+li t1, 105	#y
+sh t1, 2(t0)
+
+la t0, PLAYER_POS	#mudo para a posicao de spawn do player pos
+li t1, 180	#x
+sh t1, 0(t0)
+li t1, 105	#y
+sh t1, 2(t0)
 
 la t0, MAPA_COLISAO_ATUAL	#carrego mapa atual e mudo
 la t1, mapa_colisao2_dados	
