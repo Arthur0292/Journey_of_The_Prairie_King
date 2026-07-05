@@ -1,11 +1,11 @@
 ##############################################################
-#           Journey of The Prairie King - 2026
-#		Trabalho de ISC
-#
-#	Arthur Vitor Da Silva Nepomuceno - 261027267
-#	João Pedro Oliveira Ventura dos Santos - 261032445
-#	Simão de Almeida Silva - 261042325
-#						     
+#           Journey of The Prairie King - 2026		     #
+#		Trabalho de ISC				     #
+#							     #
+#	Arthur Vitor Da Silva Nepomuceno - 261027267	     #
+#	JoÃ£o Pedro Oliveira Ventura dos Santos - 261032445  #
+#	SimÃ£o de Almeida Silva - 261042325		     #
+#							     #			     
 ##############################################################
 
 .data
@@ -471,7 +471,7 @@ j pula_tiro
 
 pula_tiro:
 
-la t0, player_vida	#verifico se a vida é igual a 0
+la t0, player_vida	#verifico se a vida Ã© igual a 0
 lw t1, 0(t0)
 beqz t1, game_over	#se for pula pro gamer over
 
