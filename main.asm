@@ -230,6 +230,11 @@ call Print
 lw   ra, 0(sp)
 addi sp, sp, 4
 
+###########################
+#	Game Loop	  #
+###########################
+
+
 game_loop:
 
 xori s3, s0, 1	#Alterna o frame se for 0 vira 1 e se for 1 vira 0
@@ -254,7 +259,10 @@ addi sp, sp, 4
 
 continuar2:
 
-#Atualizar posicoes do jogador
+#############################################
+#	Atualizar posicoes do jogador       #
+#############################################
+
 la t0, OLD_PLAYER_POS	#Carrego em t0 o OLD_PLAYER_POS
 lh a1, 0(t0)		#Coloco em t0 o endereco do offset 0 = x
 lh a2, 2(t0)		#Coloco em t0 o endereco do offset 2 = y
@@ -498,6 +506,10 @@ lw t2, 0(t0)
 li t1, 1
 beq t2, t1, nivel_1
 
+#############################################
+#	Contador de kills de cada fase      #
+#############################################
+
 nivel2:
 
 la t0, inimigo_kill	#verifico se o contador de kill >= 8
@@ -570,11 +582,15 @@ lw   ra, 0(sp)
 addi sp, sp, 4
 
 #Alterna entre os frames 0 e 1 
-li   t0, 0xFF200604		#Endereco nase
+li   t0, 0xFF200604		#Endereco base
 sw   s3, 0(t0)		#Leio o endereco e aramzeno em s3
 mv   s0, s3		#Movo para s0 oque esta em s3 para alterna o frame no xori
 
 j game_loop
+
+###################################
+#	Logica do teclado	  #
+###################################
 
 tecla:
 
@@ -1085,6 +1101,9 @@ addi sp, sp, 4
 
 j continuar3
 
+##############################
+#	 Game over	     #
+############################## 
 
 game_over:
 
