@@ -65,9 +65,9 @@ PLAYER_STATE:
 
 #vida do jogador
 old_player_vida:
-.word 3
+.word 0
 player_vida: 
-.word 3
+.word 0
 placar_vida:
 .word sprite_um_dados, 25, 25
 .word sprite_dois_dados, 25, 25
@@ -1123,31 +1123,6 @@ sw   ra, 0(sp)
 call print_imagem
 lw   ra, 0(sp)
 addi sp, sp, 4
-
-li t0, 0xFF200000	#Carregar em t0 o endereco do teclado
-lw t1, 0(t0)	#Armazenar em t1 o endereco do teclado
-
-andi t1, t1, 1	#Se for 0 entao and 0 + 0 = 0 mas se for 1 entao and 1 + 1 = 1
-
-beq t1, zero, game_over		#Se t0 = 0 entao nao apertou nenhuma tecla e pula
-
-lw t2, 4(t0)	#Como t0 aramzena 4 bytes eu pulo e armazeno o endereco da tecla em t2
-
-li t3, '1'
-beq t2, t3 , atualizar_vida	#Se tecla = 1 muda a vida para 3
-
-li t3, '2'
-beq t2, t3, fim		#Se for tecla 2 pula para o fim do jogo
-
-atualizar_vida:
-la t0, player_vida	#atualizo a vida do player	
-li t1, 3
-sw t1, 0(t0)	#mudo para 3
-
-la t0, old_player_vida	#atualizo a old vida do player
-sw t1, 0(t0)	#mudo para 3
-
-j menu	# volto para o menu
 
 fim:
 
