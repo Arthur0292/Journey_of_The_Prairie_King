@@ -98,9 +98,9 @@ PLAYER_STATE:
 
 #vida do jogador
 old_player_vida:
-.word 0
+.word 3
 player_vida: 
-.word 0
+.word 3
 placar_vida:
 .word sprite_um_dados, 25, 25
 .word sprite_dois_dados, 25, 25
