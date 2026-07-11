@@ -581,13 +581,22 @@ pula_tiro:
 	lw t2, 0(t0)
 	li t1, 1
 	beq t2, t1, nivel_1
+	
+	la t0, nivel	#verifico qual o nivel para o contador de kills
+	lw t2, 0(t0)
+	li t1, 2
+	beq t2, t1, nivel_2
+	
+	la t0, nivel	#verifico qual o nivel para o contador de kills
+	lw t2, 0(t0)
+	li t1, 3
+	beq t2, t1, nivel_3
 
 #############################################
 #	Contador de kills de cada fase      #
 #############################################
 
-nivel2:
-
+nivel_2:
 	la t0, inimigo_kill	#verifico se o contador de kill >= 8
 	li t2, 8
 	lw t1, 0(t0)
@@ -600,6 +609,14 @@ nivel_1:
 	li t2, 8
 	lw t1, 0(t0)
 	bge t1, t2, fase2	#se for verdadeiro pula para fase 2
+	j continuar3
+	
+nivel_3:
+
+	la t0, inimigo_kill	#verifico se o contador de kill >= 8
+	li t2, 8
+	lw t1, 0(t0)
+	bge t1, t2, game_win	#se for verdadeiro pula para fase 2
 
 continuar3:
 
@@ -1385,10 +1402,93 @@ fase3:
 	j continuar3
 
 ##############################
+#	 Game win	     #
+############################## 
+
+game_win:
+
+	la t0, cor_fundo	#mudo a cor de fundo
+	li t6, 0
+	sw t6, 0(t0)	#salvo a cor branca do fundo
+
+	addi sp, sp, -4	#chamo a funcao de apagar os inimigos
+	sw ra, 0(sp)
+	call tirar_inimigos
+	lw ra, 0(sp)
+	addi sp, sp, 4
+
+	la a0, GAME_WIN_DATA #carrega o game_over
+	li a1, 0	#frame 0
+
+	addi sp, sp, -4	#Salvar o ra para o call a print_imagem
+	sw   ra, 0(sp)
+	call print_imagem
+	lw   ra, 0(sp)
+	addi sp, sp, 4
+
+	li a1, 1	#frame 1
+
+	addi sp, sp, -4	#Salvar o ra para o call a print_imagem
+	sw   ra, 0(sp)
+	call print_imagem
+	lw   ra, 0(sp)
+	addi sp, sp, 4
+
+game_win_tecla:
+
+	li t0, 0xFF200000	#Carregar em t0 o endereco do teclado
+	lw t1, 0(t0)	#Armazenar em t1 o endereco do teclado
+
+	andi t1, t1, 1	#Se for 0 entao and 0 + 0 = 0 mas se for 1 entao and 1 + 1 = 1
+
+	beq t1, zero, tocar_nota_game_over	#Se t0 = 0 entao nao apertou nenhuma tecla toc a musica
+
+	lw t2, 4(t0)	#Como t0 aramzena 4 bytes eu pulo e armazeno o endereco da tecla em t2
+
+	li t3, '2'
+	beq t2, t3, fim		#Se for tecla 2 pula para o fim do jogo
+
+tocar_nota_game_win:
+
+	la t0, MUSICA_NOTA_GAME_WIN #Carrega nota musica atual	
+	lw t1, 0(t0)
+
+	la t2, NOTAS_GAME_WIN	#Carrega notas
+	li t3, 8	#indice	
+	mul t4, t1, t3	
+	add t2, t2, t4
+
+	lw a0, 0(t2)	#le o valor da nota
+	lw a1, 4(t2)	#le a duracao das notas
+	li a2, 6	#define o instrumento
+	li a3, 120	#define o volume	
+	li a7, 31	#define a chamada syscall
+	ecall
+
+	mv a0, a1	#passa a duracao da noa para a pausa
+	li a7, 32	#define a chamada syscall
+	ecall
+
+	addi t1, t1, 1	#incrementa no musica nota atual
+	la t5, NUM_GAME_WIN	
+	lw t5, 0(t5)	#le o numero de notas
+	blt t1, t5, salvar_indice_game_win	#se contador for menor que o numero de notas salva
+	li t1, 0	#senao zera o indice
+
+salvar_indice_game_win:
+
+	sw t1, 0(t0)	#salva o indice
+	j game_win_tecla	#volta para o musica
+
+##############################
 #	 Game over	     #
 ############################## 
 
 game_over:
+
+	la t0, cor_fundo	#mudo a cor de fundo
+	li t6, 0
+	sw t6, 0(t0)	#salvo a cor branca do fundo
 
 	addi sp, sp, -4	#chamo a funcao de apagar os inimigos
 	sw ra, 0(sp)
@@ -1480,6 +1580,7 @@ fim:
 .include "funcoes/colisao_tiro.asm"
 
 .data
+.include "sprites/game_win.asm"
 .include "sprites/mapa_colisao3.asm"
 .include "sprites/fase_3/cenario3.asm"
 .include "sprites/fase_3/frente_3.asm"
