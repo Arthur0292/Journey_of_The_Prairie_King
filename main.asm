@@ -106,6 +106,9 @@ placar_vida:
 .word sprite_dois_dados, 25, 25
 .word sprite_tres_dados, 25, 25
 
+PLAYER_INVENCIVEL:	#Invencibilidade do player ao encostar no inimigo
+.word 0
+
 player_state_sprite:	#definir o sprite do player e largura
 .word sprite_frente_dados,   17, 17
 .word sprite_costas_dados,   17, 17
@@ -644,6 +647,28 @@ continuar3:
 
 pula_mover:
 
+	#decrementa invencibilidade
+	la t0, PLAYER_INVENCIVEL
+	lw t1, 0(t0)
+	beqz t1, pula_decremento
+	addi t1, t1, -1
+	sw t1, 0(t0)
+
+pula_decremento:
+
+	#checa colisao do player parado com os inimigos (causa dano se encostado)
+	la t0, PLAYER_POS
+	lh a1, 0(t0)
+	lh a2, 2(t0)
+	li a3, 17
+	li a4, 17
+
+	addi sp, sp, -4
+	sw ra, 0(sp)
+	call colisao_inimigo
+	lw ra, 0(sp)
+	addi sp, sp, 4
+
 	addi sp, sp, -4	#chamo a funcao de desenhar os inimigos
 	sw   ra, 0(sp)
 	call desenhar_inimigos
@@ -750,6 +775,24 @@ mover_cima:
 	
 	li t6, 1	#se retorna = 1 pula para tecla_fim
 	beq a0, t6, tecla_fim
+	
+	#checa colisao com inimigo
+	la t0, PLAYER_POS
+	lh t1, 2(t0)
+	addi t1, t1, -8	
+	li a3, 17
+	li a4, 17
+	mv a2, t1
+	lh a1, 0(t0)
+
+	addi sp, sp, -4		#salva o ra e chama a colisao
+	sw ra, 0(sp)
+	call colisao_inimigo
+	lw ra, 0(sp)
+	addi sp, sp, 4
+
+	li t6, 1
+	beq a0, t6, tecla_fim	#se colidiu com inimigo nao move
 
 	la t0, PLAYER_POS       # recarrega o endereco
 	lh t1, 2(t0)             # rele o y original
@@ -782,6 +825,25 @@ mover_esquerda:
 	
 	li t6, 1	#se retorna = 1 pula pra tecla_fim
 	beq a0, t6, tecla_fim
+	
+	la t0, PLAYER_POS		#Pegando o endereco da posicao do jogador
+	lh t1, 0(t0)		#ler da memoria o offset 0 = x
+	addi t1, t1, -8		#Mudar o x
+
+	#checo as colisoes com o inimigo
+	li a3, 17	#largura e altura
+	li a4, 17
+	mv a1, t1	#x
+	lh a2, 2(t0)	#y
+	
+	addi sp, sp, -4		#salva o ra e chama a colisao
+	sw ra, 0(sp)
+	call colisao_inimigo
+	lw ra, 0(sp)
+	addi sp, sp, 4
+	
+	li t6, 1
+	beq a0, t6, tecla_fim	#se colidiu com inimigo nao move
 
 	la t0, PLAYER_POS       # recarrega o endereco
 	lh t1, 0(t0)             # rele o y original
@@ -805,6 +867,7 @@ mover_baixo:
 	li a4, 17
 	mv a2, t1	#movo o y 
 	lh a1, 0(t0)	#leio x
+	
 
 	addi sp, sp, -4	#salvo o ra e checo as colisoes
 	sw ra, 0(sp)
@@ -814,6 +877,25 @@ mover_baixo:
 	
 	li t6, 1	#se retorna = 1 pula pra tecla _fim
 	beq a0, t6, tecla_fim
+	
+	la t0, PLAYER_POS		#Pegando o endereco da posicao do jogador
+	lh t1, 2(t0)		#ler da memoria o offset 2 = y
+	addi t1, t1, 8		#Soma 8
+
+	#checo as colisoes com inimigo
+	li a3, 17	#largura e altura
+	li a4, 17
+	mv a2, t1	#movo o y 
+	lh a1, 0(t0)	#leio x
+	
+	addi sp, sp, -4		#salva o ra e chama a colisao
+	sw ra, 0(sp)
+	call colisao_inimigo
+	lw ra, 0(sp)
+	addi sp, sp, 4
+	
+	li t6, 1
+	beq a0, t6, tecla_fim	#se colidiu com inimigo nao move
 
 	la t0, PLAYER_POS       # recarrega o endereco
 	lh t1, 2(t0)             # rele o y original
@@ -847,6 +929,25 @@ mover_direita:
 	
 	li t6, 1	#se retorna = 1 pula pra tecla_fim
 	beq a0, t6, tecla_fim
+	
+	la t0, PLAYER_POS		#Pegando o endereco da posicao do jogador
+	lh t1, 0(t0)		#ler da memoria o offset 0 = x
+	addi t1, t1, 8		#Soma 8
+
+	#checo as colisoes com inimigo
+	li a3, 17	#largura e altura
+	li a4, 17
+	mv a1, t1	#x
+	lh a2, 2(t0)	#y
+	
+	addi sp, sp, -4		#salva o ra e chama a colisao
+	sw ra, 0(sp)
+	call colisao_inimigo
+	lw ra, 0(sp)
+	addi sp, sp, 4
+	
+	li t6, 1
+	beq a0, t6, tecla_fim	#se colidiu com inimigo nao move
 
 	la t0, PLAYER_POS       # recarrega o endereco
 	lh t1, 0(t0)             # rele o y original
@@ -1409,7 +1510,7 @@ game_win:
 
 	la t0, cor_fundo	#mudo a cor de fundo
 	li t6, 0
-	sw t6, 0(t0)	#salvo a cor branca do fundo
+	sw t6, 0(t0)	#salvo a cor do fundo
 
 	addi sp, sp, -4	#chamo a funcao de apagar os inimigos
 	sw ra, 0(sp)
@@ -1460,7 +1561,7 @@ tocar_nota_game_win:
 
 	lw a0, 0(t2)	#le o valor da nota
 	lw a1, 4(t2)	#le a duracao das notas
-	li a2, 6	#define o instrumento
+	li a2, 1	#define o instrumento
 	li a3, 120	#define o volume	
 	li a7, 31	#define a chamada syscall
 	ecall
@@ -1488,7 +1589,7 @@ game_over:
 
 	la t0, cor_fundo	#mudo a cor de fundo
 	li t6, 0
-	sw t6, 0(t0)	#salvo a cor branca do fundo
+	sw t6, 0(t0)	#salvo a cor do fundo
 
 	addi sp, sp, -4	#chamo a funcao de apagar os inimigos
 	sw ra, 0(sp)
@@ -1564,7 +1665,7 @@ fim:
 	li a7, 10	#Encerra o jogo
 	ecall
 
-
+.include "funcoes/colisao_inimigo.asm"
 .include "funcoes/print_tiro.asm"
 .include "funcoes/apagar_tiro.asm"
 .include "funcoes/print.asm"
