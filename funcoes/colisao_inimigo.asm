@@ -50,11 +50,11 @@ colidiu_inimigo:
 	#verifica invencibilidade antes de tirar vida
 	la t0, PLAYER_INVENCIVEL
 	lw t1, 0(t0)
-	bnez t1, retorna_bloqueado	#se ainda invencivel, so bloqueia sem tirar vida
+	bnez t1, retorna_bloqueado	#se ainda invencivel so bloqueia sem tirar vida
 
 	la t0, player_vida
 	lw t1, 0(t0)
-	beqz t1, retorna_bloqueado	#seguranca, nao deixa negativo
+	beqz t1, retorna_bloqueado	# nao deixa negativo
 
 	addi t1, t1, -1
 	sw t1, 0(t0)
