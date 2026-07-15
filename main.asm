@@ -60,6 +60,11 @@ TIRO_POS: 	#posicoes atuias e antigas do tiro
 TIRO_OLD_POS:	
 .half 0, 0
 
+TIRO_DIR: 	#tiro ativo e direcao
+.word 0
+TIRO_ATIVO: 
+.word 0
+
 INIMIGO_SPAWN_POS: #posicao de sapwn do inimigo
 .half 190,10, 286,110, 86,110, 190,200 
 INIMIGO_POS: #posicao do inimigo
@@ -87,11 +92,6 @@ FRAME_COUNTER: 	#contador do tempo de spawn dos inimigos
 .word 0
 SPAWN_INTERVAL: 
 .word 240   #Intervalo de spawner do inimigo
-
-TIRO_DIR: 	#tiro ativo e direcao
-.word 0
-TIRO_ATIVO: 
-.word 0
 
 PLAYER_STATE: 
 .word 0	# 0 = frente, 1 = costas, 2 = direita, 3 = esquerda
