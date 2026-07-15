@@ -3,8 +3,8 @@
 #		Trabalho de ISC			             #
 #							     #
 #	Arthur Vitor Da Silva Nepomuceno - 261027267         #
-#	João Pedro Oliveira Ventura dos Santos - 261032445   #
-#	Simão de Almeida Silva - 261042325		     #
+#	JoÃ£o Pedro Oliveira Ventura dos Santos - 261032445   #
+#	SimÃ£o de Almeida Silva - 261042325		     #
 #							     #			     
 ##############################################################
 
@@ -65,7 +65,7 @@ INIMIGO_SPAWN_POS: #posicao de sapwn do inimigo
 INIMIGO_POS: #posicao do inimigo
 .half 195,10, 308,124, 86,124, 195,230 
 INIMIGO_OLD_POS: 
-.half 0,0, 0,0, 0,0, 0,0
+.half 195,10, 308,124, 86,124, 195,230 
 INIMIGO_ATIVO: 
 .word 0, 0, 0, 0	#Inimigo ativo ou nao
 INIMIGO_DIR:
@@ -576,7 +576,7 @@ esquerda_tiro:
 
 pula_tiro:
 
-	la t0, player_vida	#verifico se a vida é igual a 0
+	la t0, player_vida	#verifico se a vida Ã© igual a 0
 	lw t1, 0(t0)
 	beqz t1, game_over	#se for pula para o gamer over
 
