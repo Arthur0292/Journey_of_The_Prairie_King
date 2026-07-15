@@ -10,7 +10,7 @@ loop_spawn:
 	la t3, INIMIGO_ATIVO	#Armazeno o endereco de inimigo ativo
 	add t3, t3, t2
 	lw t4, 0(t3)
-	bnez t4, proximo_slot      # se jÃ¡ estÃ¡ ativo pula
+	bnez t4, proximo_slot      # se já está ativo pula
 
 	la t5, INIMIGO_SPAWN_POS	#Ler a posicao de spawn do inimigo
 	add t5, t5, t2
