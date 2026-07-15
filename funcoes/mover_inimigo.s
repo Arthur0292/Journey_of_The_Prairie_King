@@ -1,6 +1,6 @@
 mover_inimigos:
 	addi sp, sp, -28
-	sw s1, 0(sp)
+	sw s1, 0(sp)	#Salvo os valores dos registradores s na pilha
 	sw s2, 4(sp)
 	sw s3, 8(sp)
 	sw s4, 12(sp)
@@ -120,7 +120,7 @@ proximo_mover:
 	j loop_mover
 
 fim_mover:
-	lw s1, 0(sp)
+	lw s1, 0(sp)	#devolvo os valores inivias dos registradores s
 	lw s2, 4(sp)
 	lw s3, 8(sp)
 	lw s4, 12(sp)
