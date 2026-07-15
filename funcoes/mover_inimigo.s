@@ -44,11 +44,11 @@ calcula_maior:
 
 move_x:
 	blt s2, s4, inc_x	#se pos_inimigo_x < pos_player_x entao incrementa
-	addi s7, s2, -1		#diminui o x
+	addi s7, s2, -2		#diminui o x
 	j checa_colisao_x
 
 inc_x:
-	addi s7, s2, 1	#aumento o x
+	addi s7, s2, 2	#aumento o x
 
 checa_colisao_x:
 	mv a1, s7	#x candidato
@@ -78,11 +78,11 @@ dir_esquerda:
 
 move_y:
 	blt s3, s5, inc_y	#se pos_inimigo_y < pos_player_y entao incrementa
-	addi s7, s3, -1		#diminui o y
+	addi s7, s3, -2		#diminui o y
 	j checa_colisao_y
 
 inc_y:
-	addi s7, s3, 1	#aumento o y
+	addi s7, s3, 2	#aumento o y
 
 checa_colisao_y:
 	mv a1, s2	#x (mesmo, nao mudou)
