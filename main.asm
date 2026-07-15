@@ -88,7 +88,7 @@ FRAME_COUNTER: 	#contador do tempo de spawn dos inimigos
 SPAWN_INTERVAL: 
 .word 240   #Intervalo de spawner do inimigo
 
-TIRO_DIR: 
+TIRO_DIR: 	#tiro ativo e direcao
 .word 0
 TIRO_ATIVO: 
 .word 0
