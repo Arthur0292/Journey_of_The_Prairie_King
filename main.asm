@@ -61,11 +61,11 @@ TIRO_OLD_POS:
 .half 0, 0
 
 INIMIGO_SPAWN_POS: #posicao de sapwn do inimigo
-.half 190,10, 296,110, 86,110, 190,200 
+.half 190,10, 286,110, 86,110, 190,200 
 INIMIGO_POS: #posicao do inimigo
-.half 195,10, 308,124, 86,124, 195,230 
+.half 190,10, 286,110, 86,110, 190,200 
 INIMIGO_OLD_POS: 
-.half 0,0, 0,0, 0,0, 0,0
+.half 190,10, 286,110, 86,110, 190,200 
 INIMIGO_ATIVO: 
 .word 0, 0, 0, 0	#Inimigo ativo ou nao
 INIMIGO_DIR:
@@ -652,24 +652,24 @@ pula_tiro:
 #############################################
 
 nivel_2:
-	la t0, inimigo_kill	#verifico se o contador de kill >= 8
-	li t2, 8
+	la t0, inimigo_kill	#verifico se o contador de kill >= 12
+	li t2, 12
 	lw t1, 0(t0)
 	bge t1, t2, fase3	#se for verdadeiro pula para game win
 	j continuar3	#se nao continua
 
 nivel_1:
 
-	la t0, inimigo_kill	#verifico se o contador de kill >= 8
-	li t2, 8
+	la t0, inimigo_kill	#verifico se o contador de kill >= 12
+	li t2, 12
 	lw t1, 0(t0)
 	bge t1, t2, fase2	#se for verdadeiro pula para fase 2
 	j continuar3
 	
 nivel_3:
 
-	la t0, inimigo_kill	#verifico se o contador de kill >= 8
-	li t2, 8
+	la t0, inimigo_kill	#verifico se o contador de kill >= 12
+	li t2, 12
 	lw t1, 0(t0)
 	bge t1, t2, game_win	#se for verdadeiro pula para fase 2
 
