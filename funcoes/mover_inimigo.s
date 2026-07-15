@@ -1,5 +1,5 @@
 mover_inimigos:
-	addi sp, sp, -28
+	addi sp, sp, -28	#reservo 28 bytes na pilha
 	sw s1, 0(sp)	#Salvo os valores dos registradores s na pilha
 	sw s2, 4(sp)
 	sw s3, 8(sp)
