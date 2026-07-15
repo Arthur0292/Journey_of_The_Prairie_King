@@ -27,7 +27,7 @@ loop_colisao_tiro:
 	ble a7, t1, proximo_colisao
 
 	addi a7, t1, 16	#se x tiro >= inimigo x + 16
-	bge a7, a1, proximo_colisao
+	bge a1, a7, proximo_colisao
 
 	add a7, a2, a4	#se tiro y + altura <= inimigo y
 	ble a7, t6, proximo_colisao
@@ -58,12 +58,11 @@ desativar_inimigo:
 
 	li a5, 1                 # frame
 
-	addi sp, sp, -4	#salva o ra e chama o apagar para o frame 0
+	addi sp, sp, -4	#salva o ra e chama o apagar para o frame 1
 	sw ra, 0(sp)
 	call Apagar
 	lw ra, 0(sp)
 	addi sp, sp, 4
-
 
 	la t0, inimigo_kill	#carrego o contador de kills
 	lw t3, 0(t0)
